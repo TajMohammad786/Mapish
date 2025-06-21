@@ -1,7 +1,9 @@
-import { getChannelIdByName, getUploadPlaylistId, getAllVideosFromPlaylist, getLast24HrVideos } from "./video.controller.js";
-import { extractLocationFromMetadata,extractLocationFromMetadataCohere } from "./ai_extractlocation.controller.js";
+import { getChannelIdByName, getUploadPlaylistId, processVideos } from "./video.controller.js";
+import { extractLocationFromMetadataCohere } from "./ai_extractlocation.controller.js";
 import Video from "../models/videoSchema.model.js"; 
 import Channel from "../models/channel.model.js";
+import ChannelCountry from "../models/channelCountry.model.js";
+
 
 export async function saveChannelID(req, res) {
   const { channelName } = req.body;
@@ -53,58 +55,30 @@ export async function getUploadPlaylistIdFromDB(channelName) {
   }
 }
 
-export async function getYTChannelNamesFromDB() {
+export async function getYTChannelNamesFromDB(req,res) {
   try {
-    const channels = await Channel.find({});
-    // console.log("Fetched channels from DB:", channels);
-    return channels.map((c) => c.channelName);
+    const channels = await ChannelCountry.find();
+    console.log("Fetched channels from DB:", channels);
+    const channelArr = channels.map((channel)=>{
+       return channel.channelTitle;
+    })
+    
+    console.log("Channel names array:", channelArr);
+    return res.status(200).json({
+      message: "success",
+      channelArr,
+    });
   } catch (error) {
     console.error("Error fetching channel names from DB:", error.message);
-    return [];
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 }
 
 
-export async function processVideos(req, res) {
-  try {
-    const YT_CHANNEL_NAMES = await getYTChannelNamesFromDB();
-    console.log('YT_CHANNEL_NAMES', YT_CHANNEL_NAMES);
-    if (!YT_CHANNEL_NAMES || YT_CHANNEL_NAMES.length === 0) {
-      console.error("No channel names found in the database.");
-      return res.status(400).json({ message: "No channel names found in the database." });
-    }
-    
-    let ChannelVideoData = [];
-    const fetchLatestVideos =  req.query.fetch24HrVideos;
-    console.log('processVideos called' , fetchLatestVideos);
-    
-    for(let i = 0; i<YT_CHANNEL_NAMES.length; i++){
-        console.log('YT_CHANNEL_NAMES[i]', YT_CHANNEL_NAMES[i]);
-        const playlistID = await getUploadPlaylistIdFromDB(YT_CHANNEL_NAMES[i]);
-        const videos = fetchLatestVideos ? await getLast24HrVideos(playlistID) :await getAllVideosFromPlaylist(playlistID) ;
-        let channelData = {
-            channelName: YT_CHANNEL_NAMES[i],
-            videos: videos
-        }
-        ChannelVideoData.push(channelData);
-    }
-   
-    // res.status(200).json({
-    //     message: "success",
-    //     ChannelVideoData,
-    // });
-    return ChannelVideoData;
-  } catch (error) {
-    console.error("Error processing videos:", error);
-  }
-}
-
-
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-
+// This function processes videos from YouTube channels, extracts location data using AI, and saves the results to a MongoDB database.
 // Processed 916/945 videos as on 17-05-2025
 export async function populateLocationDB(req, res) {
   // const location = await extractLocationFromMetadataCohere("The Smooching Umbrella Couples of Galle, Sri Lanka 🇱🇰", "I was running around the walls at Galle Fort and in every gap there was a couple under an umbrella.\n\nThe funny thing is, it wasn't raining!\n\nI guess this is how they get some privacy, as they have nowhere else to go. In Sri Lanka it's super common for young adults to live with their parents until they get married.\n\nSo if you visit Sri Lanka and see umbrellas on a sunny day, you now have a good idea what's going on. 🤣👍\n\n#SriLanka #Galle #Travel #TravelAdvice #SoloTravel");
@@ -214,3 +188,36 @@ export async function populateLocationDB(req, res) {
     return res.status(500).json({ message: "Internal server error" });
   }
 }
+
+// export async function getChannelNameFromVideo
+
+
+export async function getCountryNameFromDB(req, res) {
+  const {channelTitle} = req.body;
+  console.log("Received channelTitle:", channelTitle);
+
+  if (!channelTitle) {
+    return res.status(400).json({ message: "Channel title is required." });
+  }
+
+  try {
+    const channelCountry = await ChannelCountry.find({ channelTitle });
+    if (!channelCountry || channelCountry.length === 0) {
+      return res.status(404).json({ message: "Channel country not found." });
+    }
+
+    return res.status(200).json({
+      message: "success",
+      countries: channelCountry[0].countries,
+    });
+  }
+  catch (error) {
+    console.error("Failed to fetch channel country:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+

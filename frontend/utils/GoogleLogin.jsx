@@ -1,6 +1,6 @@
 import {useState} from "react";
 import { useGoogleLogin } from "@react-oauth/google";
-import { googleAuth } from "./api";
+import { googleAuth } from "./authApi";
 import {useNavigate} from 'react-router-dom';
     
 const GoolgeLogin = (props) => {

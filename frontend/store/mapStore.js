@@ -1,11 +1,19 @@
 import { create } from 'zustand'
-import { getZoomLevelByAccuracy } from '../components/MapComponent';
 
 const useMapStore = create((set, get) => ({
   position: [0, 0],
   accuracy: 0,
   zoom: 16,
   isSidebarOpen: false,
+  channelNames: [],
+  selectedChannel : '',
+  selectedCountry: '',
+  dateRange: [null, null],
+  setDateRange: (range) => set({ dateRange: range }),
+
+
+  setSelectedChannel : (channel) => set({ selectedChannel: channel }),
+  setSelectedCountry : (country) => set({ selectedCountry: country }),  
   toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   
   setPosition: (pos) => set({ position: pos }),

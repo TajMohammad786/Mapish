@@ -1,40 +1,77 @@
-import { useEffect, useRef, useState,useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import useMapStore from '../store/mapStore';
+import { apiCall } from '../utils/apiCall';
+import Modal from './PlayVidModal'; // Assuming you have a Modal component
+import './VideoSidebar.css'; // Assuming you have a CSS file for styling
+import '../AppGlobal.css';
 
 const VideoSidebar = () => {
   const [videos, setVideos] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const {selectedChannel, selectedCountry} = useMapStore();
+  const {dateRange} = useMapStore();
+   const [startDate, endDate] = dateRange;
   const observer = useRef();
-  const { setPosition, setAccuracy, setZoom, toggleSidebar, isSidebarOpen } = useMapStore();
+  const [open, setOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
 
-  const lastVideoElementRef = useCallback(node => {
-    if (loading) return;
-    if (observer.current) observer.current.disconnect();
-    
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        setPage(prevPage => prevPage + 1);
-      }
-    });
-    
-    if (node) observer.current.observe(node);
-  }, [loading, hasMore]);
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedVideo(null);
+  };
+
+  const handleOpen = (video) => {
+    setSelectedVideo(video);
+    setOpen(true);
+  };
+
+  const { setPosition, setAccuracy, setZoom, isSidebarOpen,toggleSidebar } = useMapStore();
+
+  const lastVideoElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   useEffect(() => {
+    if (!selectedCountry) return;
+    setVideos([]);
+    setPage(1);
+    setHasMore(true);
+  }, [selectedCountry, selectedChannel, endDate]);
+
+  useEffect(() => {
+    const vidStartDate = startDate ? new Date(startDate).toISOString() : new Date('2020-01-01').toISOString();
+    const vidEndDate = endDate ? new Date(endDate).toISOString() : new Date().toISOString();
+    // console.log(vidStartDate, vidEndDate);
     const fetchVideos = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:8080/getVideos/videos?page=${page}&limit=10`, {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-            }
-        });
-        const data = await response.json();
-        setVideos(prev => [...prev, ...data.videos]);
+        const payload = {
+          channelTitle: selectedChannel,
+          country: selectedCountry
+        };
+        const queryParams = new URLSearchParams({
+          startDate: vidStartDate,
+          endDate: vidEndDate
+        }).toString();
+
+        const url = `http://localhost:8080/getVideos/videos?page=${page}&limit=10&${queryParams}`;
+        const response = await apiCall(url, 'POST', payload);
+        const data = response;
+        setVideos((prev) => [...prev, ...data.videos]);
         setHasMore(data.hasMore);
       } catch (error) {
         console.error('Error fetching videos:', error);
@@ -44,56 +81,73 @@ const VideoSidebar = () => {
     };
 
     fetchVideos();
-  }, [page]);
-
-  const handleVideoClick = (video) => {
-    setPosition([video.latitude, video.longitude]);
-    setAccuracy(video.accuracy);
-    setZoom(video.zoom);
-  };
+    isSidebarOpen ? '': toggleSidebar();
+  }, [page, selectedCountry, endDate]);
 
   return (
-    <div 
-      className={`fixed left-0 top-[48px] h-[calc(100vh-48px)] z-[1002] transition-transform duration-300 ease-in-out ${
-        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}
+    
+   <>
+    <div
+      className={`hide-scrollbar sidebar ${isSidebarOpen ? 'open' : ''}`}
     >
-      <div className="h-full w-[400px] bg-zinc-900 shadow-lg text-white">
-        {/* Header with toggle button */} 
-        <div className="sticky top-0 z-[1000] bg-zinc-800 border-b border-zinc-700 pl-4 py-2 flex items-center justify-between">
-          <h2 className="text-xl font-bold">Videos</h2>
-        </div>
-
-        {/* Scrollable content */}
-        <div className="h-[calc(100vh-4rem)] overflow-y-auto hide-scrollbar">
-          <div className="p-4 space-y-4">
-            {videos.map((video, index) => (
-              <div 
-                key={video.videoId || video.id || index}
-                ref={index === videos.length - 1 ? lastVideoElementRef : null}
-                onClick={() => handleVideoClick(video)}
-                className="cursor-pointer hover:bg-zinc-800 p-2 rounded transition-colors"
-              >
-                <img 
-                  src={video.thumbnails.high} 
-                  alt={video.title}
-                  className="w-full h-60 object-cover rounded"
-                />
-                <h3 className="font-semibold mt-2">{video.title}</h3>
-                <p className="text-sm text-zinc-400">{video?.locality} {video.location}</p>
-              </div>
-            ))}
-            {loading && (
-              <div className="text-center p-4">
-                <span className="animate-spin inline-block w-6 h-6 border-4 border-zinc-700 border-t-blue-500 rounded-full" />
-              </div>
-            )}
+      {videos.map((video, index) => {
+        const isLast = index === videos.length - 1;
+        return (
+          <div
+            key={video._id + video.title + index}
+            ref={isLast ? lastVideoElementRef : null}
+            onClick={() => handleOpen(video)}
+            className='video-item'
+          >
+            <img
+              src={video?.thumbnails?.high}
+              alt={video.title}
+              loading='lazy'
+            />
+            <p>{video.title}</p>
+            <small>
+              {video.locality ? video.locality + ', ' : ''}
+              {video.location ? video.location + ', ' : ''}
+              {video.country || ''}
+            </small>
           </div>
-        </div>
-      </div>
+        );
+      })}
+      {loading && <p>Loading more...</p>}
+      {!hasMore && <p className="videosidebar-empty">No more videos.<br></br> Try changing scope!!</p>}
     </div>
-  
-  );
+    <Modal isOpen={open} onClose={handleClose}>
+      {selectedVideo && (
+        <div className="modal-video-content">
+         
+            <>
+              <iframe
+                width="100%"
+                height="400"
+                src={`https://www.youtube.com/embed/${selectedVideo.playbackId}`}
+                title={selectedVideo.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                onError={() => {
+                  setSelectedVideo({
+                    ...selectedVideo,
+                    unavailable: true
+                  });
+                }}
+              ></iframe>
+            </>
+          )           <h2>{selectedVideo.title}</h2>
+          <p>
+            {selectedVideo.locality ? selectedVideo.locality + ', ' : ''}
+            {selectedVideo.location ? selectedVideo.location + ', ' : ''}
+            {selectedVideo.country || ''}
+          </p>
+        </div>
+      )}
+    </Modal>
+    </>
+  )
 };
 
 export default VideoSidebar;

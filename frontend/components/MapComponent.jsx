@@ -12,7 +12,8 @@ import {
   import 'leaflet/dist/leaflet.css';
   import { useEffect, useState } from 'react';
   import useMapStore  from '../store/mapStore';
-  import VideoSidebar from './VideoSidebar';
+ 
+  import '../AppGlobal.css';
   
   // Import marker icons (Vite/ESM compatible)
   import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -37,17 +38,7 @@ import {
     }, [position, map]);
     return null;
   };
-  export const getZoomLevelByAccuracy = (accuracy) => {
-  if (accuracy < 10) return 19;
-  if (accuracy < 20) return 18;
-  if (accuracy < 50) return 17;
-  if (accuracy < 100) return 16;
-  if (accuracy < 200) return 15;
-  if (accuracy < 500) return 14;
-  if (accuracy < 1000) return 13;
-  if (accuracy < 5000) return 12;
-  return 10;
-};
+  
 
   
   const MapWithLayers = () => {
@@ -74,7 +65,7 @@ import {
     return (
       <div className="flex h-screen w-full">
       
-      <MapContainer center={position} zoom={zoom} style={{ height: '100vh', width: '100%' }} zoomControl={false} >
+      <MapContainer center={position} zoom={zoom}  className="map-container-fullscreen" zoomControl={false} >
         <RecenterMap position={position} />
         <LocateButton  />
         
@@ -119,4 +110,3 @@ import {
   };
   
   export default MapWithLayers;
-  

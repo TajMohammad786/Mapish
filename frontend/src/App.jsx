@@ -1,38 +1,36 @@
-import './App.css'
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import GoogleLogin from '../utils/GoogleLogin';
-import {BrowserRouter, Route, Routes, Navigate} from 'react-router-dom';
-import Dashboard from '../pages/Dashboard';
+import './App.css';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { useState } from 'react';
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+import GoogleLogin from '../utils/GoogleLogin';
+import Dashboard from '../pages/Dashboard';
 import RefrshHandler from '../utils/RefreshHandler';
 import NotFound from '../components/NotFound';
 import Navbar from '../components/Navbar';
 
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-function App() {
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
-	const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-	
-	const GoogleWrapper = ()=>(
-		<GoogleOAuthProvider clientId={googleClientId}>
-			<GoogleLogin></GoogleLogin>
-		</GoogleOAuthProvider>
-	)
-	const PrivateRoute = ({ element }) => {
-		return isAuthenticated ? element : <Navigate to="/login" />
-	}
-	return (
-		<BrowserRouter>
-		    <RefrshHandler setIsAuthenticated={setIsAuthenticated} />
-			{/* <Navbar/> */}
-			<Routes>
-				<Route path="/login" element={<GoogleWrapper />} />
-				<Route path="/" element={<Navigate to="/login" />} />
-				<Route path='/dashboard' element={<PrivateRoute element={<Dashboard/>}/>}/>
-				<Route path="*" element={<NotFound/>} />
-			</Routes>
-	</BrowserRouter>
-	);
-}
+  return (
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <BrowserRouter>
+        <RefrshHandler setIsAuthenticated={setIsAuthenticated} />
+        <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
 
-export default App
+        <Routes>
+          <Route path="/" element={
+            isAuthenticated ? <Navigate to="/dashboard" /> : <GoogleLogin />
+          } />
+          <Route path="/dashboard" element={
+            isAuthenticated ? <Dashboard /> : <Navigate to="/" />
+          } />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
+  );
+};
+
+export default App;

@@ -86,27 +86,8 @@ button:focus-visible {
   }
 }
 
-
-.scrollable-container {
-  overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
 
-.scrollable-container::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
 
-.scrollable-container:hover {
-  scrollbar-width: thin;
-}
-
-.scrollable-container:hover::-webkit-scrollbar {
-  display: block;
-  width: 8px;
-}
-
-.scrollable-container:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-}

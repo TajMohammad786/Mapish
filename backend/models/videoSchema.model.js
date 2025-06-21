@@ -8,6 +8,11 @@ const videoSchema = new mongoose.Schema(
       required: true,
       unique: true, // Ensure videoId is unique
     },
+    playbackId: {
+      type: String,
+      required: true,
+      unique: true, // Ensure playbackId is unique
+    },
     title: {
       type: String,
       required: true,
