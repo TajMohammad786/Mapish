@@ -1,0 +1,49 @@
+/* This MUST be global */
+.leaflet-popup-content-wrapper {
+  background-color: #1e1e1e !important;
+  color: #f0f0f0 !important;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.leaflet-popup-tip {
+  background-color: #1e1e1e !important;
+}
+
+.leaflet-popup-close-button {
+  color: #aaa;
+}
+.leaflet-popup-close-button:hover {
+  color: #fff;
+}
+
+.popup-content {
+    position: relative;
+    width: 280px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    padding: 3px;
+    color: #f0f0f0;
+    /* border: 2px solid #aaa */
+}
+
+.popup-content img{
+    width: 100%;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    border: 1px solid #333;
+}
+
+.popup-content p {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.3rem !important;
+    font-weight: bold;
+}
+
+#popup-location {
+    margin-top: 0.1rem;
+    color: #aaa;
+    margin-bottom: 0.3rem;
+    font-size: 0.85rem;
+}
+

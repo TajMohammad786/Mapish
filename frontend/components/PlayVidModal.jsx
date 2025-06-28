@@ -1,43 +1,53 @@
 // Modal.js
 
 import React from "react";
+import './PlayVidModal.css';
 
-const Modal = ({ isOpen, onClose, children }) => {
-    if (!isOpen) return null;
+const Modal = ({ isOpen, onClose, selectedVideo }) => {
+  if (!isOpen) return null;
 
-    return (
-        <div
-            // onClick={onClose}
-            style={{
-                position: "fixed",
-                top: 0,
-                left: 200,
-                width: "100%",
-                height: "100%",
-                zIndex: 1000,
-                background: "rgba(0, 0, 0, 0.5)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <div
-                style={{
-                    background: "white",
-                    height: 500,
-                    width: 900,
-                    margin: "auto",
-                    padding: "2%",
-                    border: "2px solid #000",
-                    background: "rgba(0, 0, 0, 0.5)",
-                    borderRadius: "10px",
-                    boxShadow: "2px solid black",
-                }}
-            >
-                {children}
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        {selectedVideo && (
+          <div className="modal-video-content">
+            <div className="modal-header">
+              <button
+                onClick={onClose}
+                className="close-btn"
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <div />
             </div>
-        </div>
-    );
+            <>
+              <iframe
+                width="100%"
+                height="400"
+                // src={`https://www.youtube.com/embed/${selectedVideo.playbackId}`}
+                src={`https://www.youtube.com/embed/qRnX1fQFqK4`}
+                title={selectedVideo.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </>
+            <div className="modal-details">
+              <div>
+                <h2>{selectedVideo.title}</h2>
+                <p>
+                  {selectedVideo.locality ? selectedVideo.locality + ", " : ""}
+                  {selectedVideo.location ? selectedVideo.location + ", " : ""}
+                  {selectedVideo.country || ""}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Modal;

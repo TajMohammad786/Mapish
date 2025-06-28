@@ -84,7 +84,8 @@ export async function getUploadPlaylistId(channelId) {
     return recentVideos;
   }
 
-  export async function getVideos(req, res) {
+  // Function to get videos with pagination and filtering
+  export async function getFilteredVideos(req, res) {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
@@ -119,6 +120,38 @@ export async function getUploadPlaylistId(channelId) {
       res.status(500).json({ message: "Error fetching videos", error });
     }
   };
+
+  export async function getVideos(req, res) {
+    const {startDate, endDate} = req.query;
+    const { channelTitle, country } = req.body;
+    const query = {};
+    if (channelTitle) {
+      query.channelTitle = channelTitle;
+    }
+    if (country) {
+      query.country = country;
+    }
+    if (startDate && endDate) {
+      query.publishedAt = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate)
+      };
+    }
+    try {
+      const videos = await Video.find(query)
+        .sort({ publishedAt: -1 }) // Sort by published date, most recent first
+
+      res.json({
+        videos: videos,
+        message: "Videos fetched successfully"
+      });
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+      res.status(500).json({ message: "Error fetching videos", error });
+    }
+  }
+
+
 
 
   // To get all videos from a specific channel's upload playlist, from YT endpoint
@@ -156,7 +189,7 @@ export async function getUploadPlaylistId(channelId) {
     }
   }
 
-
+  //used just to update playbackId in the video collection
   export async function updatePlaybackId(req, res) {
     const channelVideoData = [];
     const playlistID = await getUploadPlaylistIdFromDB('DalePhilip');

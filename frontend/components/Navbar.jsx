@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import useMapStore from '../store/mapStore';
+import useVideoStore from '../store/videoStore';
 import { MdMenuOpen, MdClose } from 'react-icons/md';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,14 +10,16 @@ import { apiCall } from '../utils/apiCall'; // Adjust the import path as necessa
 
 const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
   const [showModal, setShowModal] = useState(false);
-  const { isSidebarOpen, toggleSidebar } = useMapStore();
-  const {selectedChannel, setSelectedChannel} = useMapStore();
-  const {selectedCountry, setSelectedCountry} = useMapStore();
-  const {dateRange, setDateRange} = useMapStore();
+  const { isSidebarOpen, toggleSidebar, selectedChannel, setSelectedChannel, 
+          selectedCountry, setSelectedCountry,dateRange, setDateRange,videos } = useVideoStore();
   const [startDate, endDate] = dateRange;
   const [channels, setChannels] = useState([]); // Renamed to setChannels for clarity
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState([]); // Initialize with predefined countries
+  const {searchTerm, setSearchTerm} = useVideoStore();
+
+  
+
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -71,7 +73,8 @@ useEffect(() => {
           {isSidebarOpen ? <MdClose size={20} /> : <MdMenuOpen size={20} />}
         </button>
         <h3 className="navbar-logo">Mapish</h3>
-        <input className="navbar-search" type="text" placeholder="Search..." />
+        <input className="navbar-search" type="text" placeholder="Search..." value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}/>
       </div>
 
       <div className="navbar-right">
