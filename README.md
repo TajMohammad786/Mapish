@@ -40,13 +40,19 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/mapish.git
-cd mapish
+[git clone https://github.com/TajMohammad786/Mapish.git
+cd backend
 
 # Install dependencies
 npm install
 
 # Start the development server (Vite + Express setup)
+npm run dev
+
+cd frontend
+
+npm install
+
 npm run dev
 ```
 ---
@@ -70,5 +76,5 @@ OPENAI_API_KEY=your_openai_key  # Optional, only if using AI location extraction
 # Author
 **Taj Mohammad Khan**  
 A software engineer passionate about maps, travel, and applying AI to real-world use cases.  
-[LinkedIn](https://www.linkedin.com/in/your-profile) • [Twitter](https://twitter.com/your-handle)
+[LinkedIn](https://www.linkedin.com/in/taj-mohammad-khan/) 
 
