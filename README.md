@@ -1,63 +1,74 @@
-🌍 Mapish
-Mapish is a web app that maps YouTube vlog videos to real-world locations on an interactive map. The platform aims to make travel content easily explorable by location rather than just keywords.
+# 🌍 Mapish
 
-![image](https://github.com/user-attachments/assets/95100038-a352-46e9-bdb3-da86ca36f2dd)
+**Mapish** is a web app that maps YouTube vlog videos to real-world locations on an interactive map. The goal is to make travel content easily explorable by **location** rather than just text-based search.
 
+![image](https://github.com/user-attachments/assets/be581927-779c-4f1b-87f9-665dec489090)
 
-🔧 Tech Stack
-Tech	Purpose
-React.js	Frontend framework for building UI
-React-Leaflet	Interactive map rendering
-Node.js + Express.js	Backend API & data handling
-MongoDB	Database with geospatial indexing
-OpenAI (or custom AI logic)	Extracts locations from video metadata (title + description)
+---
 
-🚀 Features
-📍 Maps YouTube vlog videos to actual geographic coordinates
+## 🔧 Tech Stack
 
-🔍 Search and filter videos by location
+- **Frontend**: React.js + React-Leaflet
+- **Backend**: Node.js + Express.js
+- **Database**: MongoDB (with geospatial indexing)
+- **AI Integration**: OpenAI (or custom AI logic) to extract locations from video titles and descriptions
+- **Other Tools**: Leaflet.js, YouTube Data API, Vite
 
-🧠 AI-powered location extraction from titles & descriptions
+---
 
-🗺️ Interactive map UI to explore content visually
+## 🚀 Features
 
-📦 Fast and scalable backend with MongoDB geospatial queries
+- 📍 Map YouTube vlog videos based on geographic coordinates  
+- 🧠 Extract location info using AI from titles and descriptions  
+- 🗺️ Explore vlog content visually using an interactive map  
+- 🔍 Filter videos by place  
+- 🎥 Watch YouTube videos directly within the app  
 
-🧠 How it works
-Fetch videos from travel/vlog YouTube channels.
+---
 
-Use AI to extract possible locations from video metadata.
+## 🧠 How It Works
 
-Store each video in MongoDB using a GeoJSON Point.
+1. Fetch videos from selected YouTube vlog/travel channels.
+2. Extract location information using AI from video metadata.
+3. Store videos in MongoDB with location as a `GeoJSON Point`.
+4. Render the videos on a Leaflet map as markers.
+5. Click markers to see video details and watch the embedded YouTube video.
 
-Display the videos as markers on a Leaflet map.
+---
 
-Allow users to click markers and watch embedded YouTube videos.
+## ⚙️ Getting Started
 
-⚙️ Getting Started
-bash
-Copy
-Edit
-# Clone the repo
+```bash
+# Clone the repository
 git clone https://github.com/yourusername/mapish.git
 cd mapish
 
 # Install dependencies
 npm install
 
-# Start the client and server (adjust as needed)
-npm run dev   # for Vite + Express concurrently
-Set up environment variables (e.g. MongoDB URI, YouTube API key, OpenAI key) in .env.
+# Start the development server (Vite + Express setup)
+npm run dev
+```
+---
 
-🧪 Future Ideas
-🗂️ Categorize videos by theme (food, nature, city, etc.)
+# .env file
+MONGO_URI=your_mongodb_connection_string
+YOUTUBE_API_KEY=your_youtube_api_key
+OPENAI_API_KEY=your_openai_key  # Optional, only if using AI location extraction
 
-🔔 User subscriptions or location alerts
+---
 
-📦 Deploy on Vercel/Render + MongoDB Atlas
+# Roadmap
+- [ ] Add category filters (e.g., nature, food, city)
+- [ ] Improve location accuracy with reverse geocoding
+- [ ] Add search by region/country
+- [ ] Deploy to Vercel/Render + MongoDB Atlas
+- [ ] PWA/mobile version
 
-📱 Responsive design / mobile PWA version
+---
 
-🙋‍♂️ About the Author
-Hi! I'm Taj Mohammad Khan, a software engineer passionate about travel, maps, and using AI for creative solutions.
-Connect with me on LinkedIn 
+# Author
+**Taj Mohammad Khan**  
+A software engineer passionate about maps, travel, and applying AI to real-world use cases.  
+[LinkedIn](https://www.linkedin.com/in/your-profile) • [Twitter](https://twitter.com/your-handle)
+
