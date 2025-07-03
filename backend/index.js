@@ -5,19 +5,27 @@ import { connectDB } from './utils/dbConnect.js';
 import authRoutes from './routes/auth.routes.js';
 import videoRoutes from './routes/video.routes.js';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 8080;
-
+const baseOrigin = 'http://localhost:5173'
+if(process.env.NODE_ENV === 'production'){
+    baseOrigin = 'https://mapish.onrender.com/'
+}
 
 connectDB();
 app.use(cors({
-  origin: 'http://localhost:5173', // Your frontend URL
+  origin: baseOrigin,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
+
 app.use(express.json());
 
 app.use('/getVideos', videoRoutes);
