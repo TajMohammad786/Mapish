@@ -25,7 +25,7 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
     const fetchChannels = async () => {
       setLoading(true);
       try {
-        const ytChannelNames = await apiCall('http://localhost:8080/getVideos/getYTChannel', 'POST');
+        const ytChannelNames = await apiCall('/getVideos/getYTChannel', 'POST');
         if (ytChannelNames.channelArr) {
           setChannels(ytChannelNames.channelArr);
           console.log(channels);
@@ -47,7 +47,7 @@ useEffect(() => {
     setLoading(true);
     try {
       const payload = { channelTitle: selectedChannel };
-      const res = await apiCall('http://localhost:8080/getVideos/getCountryNameFromDB', 'POST', payload);
+      const res = await apiCall('/getVideos/getCountryNameFromDB', 'POST', payload);
       if (res?.countries) {
         setCountries(res.countries);
       }

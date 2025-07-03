@@ -60,7 +60,7 @@ const VideoSidebar = () => {
         endDate: vidEndDate
       }).toString();
       // console.log('initial', payload)
-      const url = `http://localhost:8080/getVideos/videos?${queryParams}`;
+      const url = `/getVideos/videos?${queryParams}`;
       const response = await apiCall(url, 'POST', payload);
       const data = response;
       // setVideos((prev) => [...prev, ...data.videos]);

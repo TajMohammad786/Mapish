@@ -84,6 +84,30 @@ export async function getUploadPlaylistId(channelId) {
     return recentVideos;
   }
 
+  export async function getLastMonthVideos(playlistId) {
+    const playlistData = await axios.get("https://www.googleapis.com/youtube/v3/playlistItems", {
+      params: {
+        part: "snippet",
+        playlistId,
+        maxResults: 10,
+        key: YT_API_KEY
+      },
+    });
+
+    const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const recentVideos = playlistData.data.items.filter(item =>
+      new Date(item.snippet.publishedAt) > oneMonthAgo
+    );
+
+    recentVideos.forEach(item => {
+      const title = item.snippet.title;
+      const videoId = item.snippet.resourceId.videoId;
+      console.log(`${title} - https://www.youtube.com/watch?v=${videoId}`);
+    });
+      
+    return recentVideos;
+  }
+
   // Function to get videos with pagination and filtering
   export async function getFilteredVideos(req, res) {
     const page = parseInt(req.query.page) || 1;
@@ -157,8 +181,10 @@ export async function getUploadPlaylistId(channelId) {
   // To get all videos from a specific channel's upload playlist, from YT endpoint
   export async function processVideos(req, res) {
     try {
-      const YT_CHANNEL_NAMES = await getYTChannelNamesFromDB();
+      // const YT_CHANNEL_NAMES = await getYTChannelNamesFromDB();
+      const YT_CHANNEL_NAMES = ['DalePhilip'];
       console.log('YT_CHANNEL_NAMES', YT_CHANNEL_NAMES);
+
       if (!YT_CHANNEL_NAMES || YT_CHANNEL_NAMES.length === 0) {
         console.error("No channel names found in the database.");
         return res.status(400).json({ message: "No channel names found in the database." });
