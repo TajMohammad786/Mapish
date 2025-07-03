@@ -117,28 +117,26 @@ const MapWithLayers = () => {
         <ZoomControl position="bottomright" /> {/* Add custom zoom control */}
         <LayersControl position="bottomright">
           <BaseLayer checked name="Street View">
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; OpenStreetMap contributors'
+            />
+          </BaseLayer>
+          {/* <BaseLayer checked name="Street View">
             {/* <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; OpenStreetMap contributors'
-            /> */}
-            {/* <TileLayer
-              url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=rcKauXlxc2yJC4fSCM07"
-              attribution='&copy; <a href="https://www.maptiler.com/">MapTiler</a>'
-            /> */}
-            
+            />            
             <TileLayer
               url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
               attribution='© OpenStreetMap France | © OpenStreetMap contributors'
             /> 
-            
-          </BaseLayer>
-  
+          </BaseLayer> */}
           <BaseLayer name="Satellite View">
             <TileLayer
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
               attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
             />
-             
           </BaseLayer>
            {/* <BaseLayer name="Positron View">
             <TileLayer
