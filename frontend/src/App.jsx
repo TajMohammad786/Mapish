@@ -11,7 +11,7 @@ import Navbar from '../components/Navbar';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const googleClientId = '639894565953-tegbiaf6ef1fo3crl4ireadeabss05kv.apps.googleusercontent.com';
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
