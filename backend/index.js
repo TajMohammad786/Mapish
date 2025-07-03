@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 8080;
-const baseOrigin = 'http://localhost:5173'
+let baseOrigin = 'http://localhost:5173';
 if(process.env.NODE_ENV === 'production'){
     baseOrigin = 'https://mapish.onrender.com/'
 }
