@@ -14,7 +14,7 @@ export const apiCall = async (url, method = 'GET', data = null, headers = {}) =>
     }
 
     try {
-        const baseUrl = import.meta.env.MODE = "development"? "http://localhost:8080" + url : url;
+        const baseUrl = import.meta.env.MODE == "development"? "http://localhost:8080" + url : url;
         const response = await fetch(baseUrl, options);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
