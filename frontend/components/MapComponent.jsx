@@ -68,7 +68,7 @@ const RecenterMap = ({ position }) => {
 const MapWithLayers = () => {
     const { position, accuracy, zoom, updateLocation } = useMapStore();
     const { videos, open, selectedVideo, handleClose, handleOpen, toggleSidebar,
-       isSidebarOpen, setSelectedVideoId } = useVideoStore();
+       isSidebarOpen, setSelectedVideoId, isMobile } = useVideoStore();
 
     useEffect(() => {
       if (navigator.geolocation) {
@@ -168,7 +168,7 @@ const MapWithLayers = () => {
               <div
                 className='popup-content'
                 onClick={() => {
-                  handleOpen({ playbackId: videoId, title, thumbnail, location, locality, country })
+                  isMobile ? '': handleOpen({ playbackId: videoId, title, thumbnail, location, locality, country })
                   isSidebarOpen ? '':toggleSidebar();
                   setSelectedVideoId(videoId);
                 }}

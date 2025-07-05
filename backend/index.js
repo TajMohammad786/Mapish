@@ -45,6 +45,6 @@ app.all('*', (req, res, next) => {
     next(new AppError(`Can't on the server`, 404));
 });
 
-app.listen(PORT, () => {
+app.listen(PORT,'0.0.0.0', () => {
     console.log(`Server is running on ${PORT}`)
 })

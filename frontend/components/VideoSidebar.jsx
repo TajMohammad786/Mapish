@@ -22,6 +22,10 @@ const VideoSidebar = () => {
   const videoRefs = useRef({});
   const selectedVideoId = useVideoStore((state) => state.selectedVideoId);
   const searchTerm = useVideoStore((state) => state.searchTerm);
+  const isMobile = useVideoStore((state) => state.isMobile);
+
+  const [iframeLoaded, setIframeLoaded] = useState({});
+
 
   const filteredVideos = videos.filter((video) =>
     video.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -108,15 +112,50 @@ const VideoSidebar = () => {
             ref={(el) => {
               if (el) videoRefs.current[video.playbackId] = el;
             }}
+            onClick={() => {
+              if (isMobile) {
+                setIframeLoaded(prev => ({ [video.playbackId]: true }));
+              } else {
+                handleOpen(video); // Open modal for desktop
+              }
+            }}
 
-            onClick={() => handleOpen(video)}
             className={`video-item ${selectedVideoId === video.playbackId ? 'highlighted' : ''}`}
           >
+          {isMobile ? (
+            
+            iframeLoaded[video.playbackId] ? (
+              <iframe
+                width="100%"
+                height="170"
+                src={`https://www.youtube.com/embed/${video.playbackId}`}
+                title={video.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <img
+                src={`https://img.youtube.com/vi/${video.playbackId}/hqdefault.jpg`}
+                alt={video.title}
+                width="100%"
+                height="170"
+                loading="lazy"
+                style={{ cursor: 'pointer', objectFit: 'cover' }}
+              />
+            )
+            
+
+          ) : (
             <img
-              src={video?.thumbnails?.high}
+              src={`https://img.youtube.com/vi/${video.playbackId}/hqdefault.jpg`}
               alt={video.title}
-              loading='lazy'
+              loading="lazy"
+              style={{ width: '100%', height: '170px', objectFit: 'cover' }}
             />
+          )}
+
+            
             <p>{video.title}</p>
             <small>
               {video.locality ? video.locality + ', ' : ''}
@@ -130,9 +169,10 @@ const VideoSidebar = () => {
 
       
     </div>
-    <Modal isOpen={open} onClose={handleClose} selectedVideo={selectedVideo}>
-    
-    </Modal>
+    {!isMobile && (
+      <Modal isOpen={open} onClose={handleClose} selectedVideo={selectedVideo} />
+    )}
+
     </>
   )
 };

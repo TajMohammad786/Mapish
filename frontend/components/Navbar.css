@@ -133,22 +133,14 @@
   color: white;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
 
-  transform: translateX(100%); /* Hide off screen */
-  transition: transform 0.3s ease;
 }
-
-.mobile-filter-drawer.open {
-  transform: translateX(0); /* Slide in */
-}
-
-
 
 /* === DRAWER HEADER === */
 .drawer-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* ensures text left and button right */
   align-items: center;
-  height: 60px;
+  height: 60px - 1rem;
   padding: 0 0.75rem;
   border-bottom: 1px solid #333;
   margin-bottom: 1rem;
@@ -159,9 +151,9 @@
   margin: 0;
   font-size: 1rem;
   color: #fff;
-  flex: 1;
-  text-align: center;
+  text-align: left;
 }
+
 
 .drawer-back-btn,
 .drawer-settings-btn {

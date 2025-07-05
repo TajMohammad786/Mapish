@@ -9,7 +9,7 @@ import { apiCall } from '../utils/apiCall';
 const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
   const [showModal, setShowModal] = useState(false);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const isMobile = useVideoStore((state) => state.isMobile);
   const {
     isSidebarOpen,
     toggleSidebar,
@@ -30,11 +30,6 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
 
   const [startDate, endDate] = dateRange;
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -207,14 +202,14 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
       {isMobile && showFilterDrawer && (
         <div className={`mobile-filter-drawer ${showFilterDrawer ? 'open' : ''}`}>
           <div className="drawer-header">
+          <h4>Filters</h4>
             <button
               onClick={() => setShowFilterDrawer(false)}
               className="drawer-back-btn"
               aria-label="Close drawer"
             >
-              ←
+              x
             </button>
-            <h4>Filters</h4>
           </div>
 
           

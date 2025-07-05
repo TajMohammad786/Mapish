@@ -11,10 +11,15 @@ const useVideoStore = create((set, get) => ({
     open: false,
     selectedVideoId: null,
     searchTerm: '',
+    isMobile: window.innerWidth < 768,
+    setIsMobile: (value) => set({ isMobile: value }),
+
+    updateIsMobile: () => {
+        set({ isMobile: window.innerWidth < 768 });
+    },
+
     setSearchTerm: (term) => set({ searchTerm: term }),
-
     setSelectedVideoId: (id) => set({ selectedVideoId: id }),
-
     handleClose: () => set({ open: false, selectedVideo: null }),
     handleOpen: (video) => set({ selectedVideo: video, open: true }),
 
