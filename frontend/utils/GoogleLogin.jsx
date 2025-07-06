@@ -4,7 +4,7 @@ import { googleAuth } from "./authApi";
 import {useNavigate} from 'react-router-dom';
 
     
-const GoolgeLogin = (props) => {
+const GoogleLogin = (props) => {
 	const [user, setUser] = useState(null);
 	const navigate = useNavigate();
 	const responseGoogle = async (authResult) => {
@@ -41,4 +41,4 @@ const GoolgeLogin = (props) => {
 	);
 };
 
-export default GoolgeLogin;
+export default GoogleLogin;
