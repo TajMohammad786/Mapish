@@ -2,6 +2,7 @@ import {useState} from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { googleAuth } from "./authApi";
 import {useNavigate} from 'react-router-dom';
+
     
 const GoolgeLogin = (props) => {
 	const [user, setUser] = useState(null);
@@ -31,11 +32,12 @@ const GoolgeLogin = (props) => {
 	});
 
 	return (
-		<div className="App">
-			<button onClick={googleLogin}>
+		<div className="App" style={{ display: "flex", justifyContent: "center" }}>
+			<button onClick={googleLogin} style={{ marginTop: "300px" }}>
 				Sign in with Google
-			</button>	
+			</button>
 		</div>
+
 	);
 };
 
