@@ -6,7 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './Navbar.css';
 import { apiCall } from '../utils/apiCall';
 
-const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
+const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   const isMobile = useVideoStore((state) => state.isMobile);
@@ -22,7 +22,11 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
     videos,
     searchTerm,
     setSearchTerm,
+    setSelectedVideoId,
   } = useVideoStore();
+  const isAuthenticated = useVideoStore((state) => state.isAuthenticated);
+  const setIsAuthenticated = useVideoStore((state) => state.setIsAuthenticated);
+  // const selectedVideoId = useVideoStore((state) => state.selectedVideoId);
 
   const [channels, setChannels] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -35,9 +39,16 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
     const fetchChannels = async () => {
       setLoading(true);
       try {
-        const ytChannelNames = await apiCall('/getVideos/getYTChannel', 'POST');
-        if (ytChannelNames.channelArr) {
-          setChannels(ytChannelNames.channelArr);
+        if(isAuthenticated){
+          const ytChannelNames = await apiCall('/getVideos/getYTChannel', 'POST');
+          
+          if (ytChannelNames.channelArr) {
+            setChannels(ytChannelNames.channelArr);
+          }
+
+        }
+        else{
+          throw new Error("User is not authenticated");
         }
       } catch (err) {
         console.error("Error fetching channels", err);
@@ -47,7 +58,7 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
     };
 
     fetchChannels();
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -56,7 +67,7 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
       try {
         const payload = { channelTitle: selectedChannel };
         const res = await apiCall('/getVideos/getCountryNameFromDB', 'POST', payload);
-        if (res?.countries) {
+        if (res?.countries && isAuthenticated) {
           setCountries(res.countries);
         }
       } catch (err) {
@@ -67,7 +78,7 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
     };
 
     fetchCountries();
-  }, [selectedChannel]);
+  }, [selectedChannel,isAuthenticated]);
 
   const handleLogout = () => {
     setIsAuthenticated(false);
@@ -106,7 +117,11 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
     <>
       <nav className="navbar">
         <div className="navbar-left">
-          <button onClick={() => {setShowFilterDrawer(false);toggleSidebar()}} className="sidebar-toggle">
+          <button onClick={() => {
+                            setShowFilterDrawer(false);
+                            toggleSidebar();
+                            // setSelectedVideoId(null);
+                          }} className="sidebar-toggle">
             {isSidebarOpen ? <MdClose size={20} /> : <MdMenuOpen size={20} />}
           </button>
           <h3 className="navbar-logo">Mapish</h3>

@@ -12,6 +12,8 @@ const useVideoStore = create((set, get) => ({
     selectedVideoId: null,
     searchTerm: '',
     isMobile: window.innerWidth < 768,
+    isAuthenticated : false,
+    setIsAuthenticated : (value) => set({ isAuthenticated: value }),
     setIsMobile: (value) => set({ isMobile: value }),
 
     updateIsMobile: () => {

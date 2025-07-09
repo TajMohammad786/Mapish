@@ -11,7 +11,7 @@ import Navbar from '../components/Navbar';
 import useVideoStore from '../store/videoStore';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const isAuthenticated = useVideoStore((state) => state.isAuthenticated);
   const googleClientId = '639894565953-tegbiaf6ef1fo3crl4ireadeabss05kv.apps.googleusercontent.com';
    const updateIsMobile = useVideoStore((state) => state.updateIsMobile);
 
@@ -29,11 +29,13 @@ const App = () => {
     };
   }, [updateIsMobile]);
 
+ 
+
   return (
     <GoogleOAuthProvider clientId={googleClientId}>
       <BrowserRouter>
-        <RefrshHandler setIsAuthenticated={setIsAuthenticated} />
-        <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+        <RefrshHandler />
+        <Navbar  />
 
         <Routes>
           <Route path="/" element={
