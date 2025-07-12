@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './Navbar.css';
 import { apiCall } from '../utils/apiCall';
+import { IoSettingsOutline } from "react-icons/io5";
 
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -19,10 +20,8 @@ const Navbar = () => {
     setSelectedCountry,
     dateRange,
     setDateRange,
-    videos,
     searchTerm,
     setSearchTerm,
-    setSelectedVideoId,
   } = useVideoStore();
   const isAuthenticated = useVideoStore((state) => state.isAuthenticated);
   const setIsAuthenticated = useVideoStore((state) => state.setIsAuthenticated);
@@ -120,7 +119,6 @@ const Navbar = () => {
           <button onClick={() => {
                             setShowFilterDrawer(false);
                             toggleSidebar();
-                            // setSelectedVideoId(null);
                           }} className="sidebar-toggle">
             {isSidebarOpen ? <MdClose size={20} /> : <MdMenuOpen size={20} />}
           </button>
@@ -188,11 +186,11 @@ const Navbar = () => {
               className="drawer-settings-btn"
               aria-label="Settings"
             >
-              ⚙️
+              <IoSettingsOutline />
             </button>)}
 
           {!isMobile && (
-            <button onClick={() => setShowModal(prev => !prev)} className="settings-button">⚙️</button>
+            <button onClick={() => setShowModal(prev => !prev)} className="settings-button"><IoSettingsOutline /></button>
           )}
 
 

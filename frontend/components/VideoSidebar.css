@@ -18,7 +18,7 @@
 
 @media (max-width: 600px) {
   .hide-scrollbar {
-    width: 100vw;
+    width: 98vw;
     left: 0;
     top: 60px; /* or your navbar height */
     height: calc(100vh - 60px);

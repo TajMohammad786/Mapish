@@ -69,6 +69,7 @@ const MapWithLayers = () => {
     const { position, accuracy, zoom, updateLocation } = useMapStore();
     const { videos, open, selectedVideo, handleClose, handleOpen, toggleSidebar,
        isSidebarOpen, setSelectedVideoId, isMobile } = useVideoStore();
+    const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
 
     useEffect(() => {
       if (navigator.geolocation) {
@@ -118,35 +119,44 @@ const MapWithLayers = () => {
         <LayersControl position="bottomright">
           <BaseLayer checked name="Street View">
             <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; OpenStreetMap contributors'
-            />
+              url={`https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=${mapTilerApiKey}`}
+              attribution='&copy; <a href="https://www.maptiler.com/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              />
           </BaseLayer>
-          {/* <BaseLayer checked name="Street View">
-            {/* <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; OpenStreetMap contributors'
-            />            
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
-              attribution='© OpenStreetMap France | © OpenStreetMap contributors'
-            /> 
-          </BaseLayer> */}
           <BaseLayer name="Satellite View">
             <TileLayer
-              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-              attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+              url={`https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=${mapTilerApiKey}`}
+              attribution='&copy; <a href="https://www.maptiler.com/">MapTiler</a>'
             />
           </BaseLayer>
-           {/* <BaseLayer name="Positron View">
+
+          {/* <BaseLayer checked name="Street View">
             <TileLayer
-              url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-              attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; OpenStreetMap contributors'
             />
           </BaseLayer> */}
+          {/* <BaseLayer checked name="Street View">
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png"
+            attribution='© OpenStreetMap France | © OpenStreetMap contributors'
+          /> 
+        </BaseLayer>  */}
+          {/* <BaseLayer name="Satellite View">
+          <TileLayer
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+          />
+        </BaseLayer> */}
+          {/* <BaseLayer name="Positron View">
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+            attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+          />
+        </BaseLayer> */}
+
         </LayersControl>
   
-
         <Circle
             center={position}
             pathOptions={{ color: 'magenta', fillOpacity: 0.1 }}
