@@ -1,4 +1,4 @@
-.map-container-fullscreen {
+/* .map-container-fullscreen {
   height: 100vh;
   width: 100vw;
   position: absolute;
@@ -6,6 +6,11 @@
   left: 0;
   z-index: 0;
   overflow: hidden;
+} */
+ .map-container-fullscreen {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
 }
 
 .dashboard-fullscreen {

@@ -79,9 +79,9 @@ export async function getYTChannelNamesFromDB(req,res) {
 
 
 // This function processes videos from YouTube channels, extracts location data using AI, and saves the results to a MongoDB database.
-// Processed 916/945 videos as on 17-05-2025
-// Processed 648/1073 videos as on 28-06-2025
-// Processed 823/1073 videos as on 29-06-2025
+// Processed 916/945 videos as on 17-05-2025 - Dale Philip
+// Processed 648/1073 videos as on 28-06-2025 - Daily Max
+// Processed 823/1073 videos as on 29-06-2025 - Daily Max
 export async function populateLocationDB(req, res) {
   // const location = await extractLocationFromMetadataCohere("The Smooching Umbrella Couples of Galle, Sri Lanka 🇱🇰", "I was running around the walls at Galle Fort and in every gap there was a couple under an umbrella.\n\nThe funny thing is, it wasn't raining!\n\nI guess this is how they get some privacy, as they have nowhere else to go. In Sri Lanka it's super common for young adults to live with their parents until they get married.\n\nSo if you visit Sri Lanka and see umbrellas on a sunny day, you now have a good idea what's going on. 🤣👍\n\n#SriLanka #Galle #Travel #TravelAdvice #SoloTravel");
   // const location = await extractLocationFromMetadata("The Smooching Umbrella Couples of Galle, Sri Lanka 🇱🇰", "I was running around the walls at Galle Fort and in every gap there was a couple under an umbrella.\n\nThe funny thing is, it wasn't raining!\n\nI guess this is how they get some privacy, as they have nowhere else to go. In Sri Lanka it's super common for young adults to live with their parents until they get married.\n\nSo if you visit Sri Lanka and see umbrellas on a sunny day, you now have a good idea what's going on. 🤣👍\n\n#SriLanka #Galle #Travel #TravelAdvice #SoloTravel");

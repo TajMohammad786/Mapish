@@ -19,6 +19,7 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {LocateButton} from './LocateButton';
 import WorldBorders from '../utils/worldBorders';
+import MapSearchBar from './MapSearchBar';
 
 import ytIcon from '../src/assets/yt-icon.png';
 import './MapComponent.css';
@@ -111,6 +112,7 @@ const MapWithLayers = () => {
       <div className="flex h-screen w-full">
       
       <MapContainer center={position} zoom={zoom}  className="map-container-fullscreen" zoomControl={false} >
+        <MapSearchBar/>
         <RecenterMap position={position} />
         <LocateButton  />
         <WorldBorders />
