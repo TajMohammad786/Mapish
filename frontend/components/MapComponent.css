@@ -47,18 +47,29 @@
     font-size: 0.85rem;
 }
 
+/* Desktop: default Leaflet controls position */
+.leaflet-bottom.leaflet-right {
+  margin-bottom: 20px;
+  /* margin-right: 20px; */
+}
+
+/* Mobile: push controls up and in so they're always visible */
+@media (max-width: 600px) {
+  .leaflet-bottom.leaflet-right {
+    margin-bottom: 70px; /* Increase if needed to avoid overlap with browser UI */
+    /* margin-right: 10px; */
+  }
+}
+
 
 .leaflet-control-geosearch {
-  /* pointer-events: auto;  make the search bar itself clickable */
    position: absolute;
   top: 60px; /* height of your navbar */
   right: 20px;
-  z-index: 1001;
   width: 300px; /* or auto, adjust as needed */
   pointer-events: auto; /* allows Leaflet controls to be clickable */
   background: #222 !important;
   border-radius: 8px !important;
-  /* box-shadow: 0 2px 8px rgba(0,0,0,0.4); */
   border: 1px solid #444 !important;
 
 }
@@ -70,6 +81,7 @@
   padding: 10px 12px !important;
   border-radius: 6px !important;
   font-size: 1em !important;
+  padding-right: 30px !important;
 }
 
 .leaflet-control-geosearch form {
