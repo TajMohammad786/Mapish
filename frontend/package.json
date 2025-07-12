@@ -29,7 +29,8 @@
     "react-router-dom": "^7.6.0",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.7",
-    "zustand": "^5.0.4"
+    "zustand": "^5.0.4",
+    "leaflet-geosearch": "4.2.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.4",
