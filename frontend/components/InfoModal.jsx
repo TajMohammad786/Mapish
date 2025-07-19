@@ -1,4 +1,5 @@
 import "./InfoModal.css";
+import MapImg from "../src/assets/image1.png"
 
 export default function InfoModal({ open, onClose }) {
   if (!open) return null;
@@ -7,7 +8,7 @@ export default function InfoModal({ open, onClose }) {
       <div className="info-modal__container" onClick={(e) => e.stopPropagation()}>
         <div className="info-modal__top-bar">
           <h2 className="info-modal__button-title">
-            <img src="../src/assets/image1.png" alt=""  style={{ width: "30px", height: "30px", marginRight: "10px", borderRadius:"20px" }} />
+            <img src={MapImg} alt=""  style={{ width: "30px", height: "30px", marginRight: "10px", borderRadius:"20px" }} />
                 About Mapish
           </h2>
           <button
