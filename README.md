@@ -19,7 +19,7 @@
 ## 🚀 Features
 
 - 📍 Map YouTube vlog videos based on geographic coordinates  
-- 🧠 Extract location info using AI from titles and descriptions  
+- 🧠 Location is derived from location info using AI from titles and descriptions  
 - 🗺️ Explore vlog content visually using an interactive map  
 - 🔍 Filter videos by place  
 - 🎥 Watch YouTube videos directly within the app  
