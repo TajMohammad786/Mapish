@@ -6,7 +6,7 @@
     height: calc(100vh - 60px);
     background: #000;
     color: #fff;
-    z-index: 10000;
+    z-index: 9998;
     padding: 1rem;
     /* overflowY: auto; */
     overflow-y: scroll; /*Keep scroll functionality*/ 

@@ -24,7 +24,7 @@ const Modal = ({ isOpen, onClose, selectedVideo }) => {
             <>
               <iframe
                 width="100%"
-                height="400"
+                height="470"
                 src={`https://www.youtube.com/embed/${selectedVideo.playbackId}`}
                 // src={`https://www.youtube.com/embed/qRnX1fQFqK4`}
                 // src={`https://www.youtube.com/embed/XtvRMZjYXsc`}

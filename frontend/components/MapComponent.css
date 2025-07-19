@@ -114,5 +114,15 @@
   background: #444 !important;
 }
 
+.leaflet-control-geosearch .results > .active,
+.leaflet-control-geosearch .results > li.active {
+  background: #444 !important;
+  color: #fff !important;
+}
+
+.leaflet-control-geosearch .results > li {
+  color: #fff !important;
+}
+
 
 

@@ -119,6 +119,16 @@
   cursor: pointer;
 }
 
+.info-button{
+  color: #fff;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  
+}
+
 .mobile-filter-drawer {
   position: fixed;
   top: 0;

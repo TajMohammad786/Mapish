@@ -1,0 +1,95 @@
+/* Modal overlay */
+.info-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    color: white;
+}
+
+/* Modal container */
+.info-modal__container {
+    background: black;
+    border-radius: 12px;
+    width: 95%;
+    height: 95%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.2);
+    position: relative;
+    border: 2px solid rgba(187, 187, 187, 0.5);
+}
+
+/* Modal top bar */
+.info-modal__top-bar {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-bottom: 1px solid #333;
+    display: flex;
+    border-radius: 12px 12px 0 0;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: black;
+    z-index: 10001;
+    border: 1px solid #333;
+}
+
+/* Modal scrollable content */
+.info-modal__content {
+    /* padding: 2rem; */
+    padding-left: 30px;
+    padding-right: 30px;
+    overflow-y: auto;
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE/Edge */
+}
+
+.info-modal__content::-webkit-scrollbar {
+  display: none;                /* Chrome/Safari */
+}
+
+
+
+/* Button title style */
+.info-modal__button-title {
+    background-color: #222;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+   
+}
+
+/* Section header style */
+.info-modal__section-header {
+    background-color: #333;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    color: white;
+    display: inline-block;
+    margin: 1.5rem 0 0.5rem;
+}
+
+/* Close button style */
+.info-modal__close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+

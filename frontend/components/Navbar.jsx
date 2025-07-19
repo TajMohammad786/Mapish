@@ -6,10 +6,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './Navbar.css';
 import { apiCall } from '../utils/apiCall';
 import { IoSettingsOutline } from "react-icons/io5";
+import { TiInfoLargeOutline } from "react-icons/ti";
+import { FaRegLightbulb } from "react-icons/fa";
+import InfoModal from './InfoModal';
 
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
   const isMobile = useVideoStore((state) => state.isMobile);
   const {
     isSidebarOpen,
@@ -32,6 +36,7 @@ const Navbar = () => {
   const [loading, setLoading] = useState(false);
 
   const [startDate, endDate] = dateRange;
+  
 
 
   useEffect(() => {
@@ -181,13 +186,22 @@ const Navbar = () => {
               Filters
             </button>
           )}
+          
+          <button onClick={() => setInfoOpen(true)} aria-label="App Info" style={{color : 'white'}} className='info-button'>
+              <FaRegLightbulb />
+          </button>
+          <InfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
+
           {isMobile && ( <button
               onClick={() => setShowModal(prev => !prev)}
               className="drawer-settings-btn"
               aria-label="Settings"
-            >
+              >
               <IoSettingsOutline />
-            </button>)}
+            </button>
+          )}
+
+          
 
           {!isMobile && (
             <button onClick={() => setShowModal(prev => !prev)} className="settings-button"><IoSettingsOutline /></button>
