@@ -161,7 +161,7 @@ const MapWithLayers = () => {
   
         <Circle
             center={position}
-            pathOptions={{ color: 'magenta', fillOpacity: 0.1 }}
+            pathOptions={{ color: 'magenta', fillOpacity: 0.05 }}
             radius={accuracy}
         />
   

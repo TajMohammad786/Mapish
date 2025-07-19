@@ -13,7 +13,7 @@ export const LocateButton = () => {
   };
 
   return (
-    <div className="absolute bottom-24 right-16 z-[1000] md:bottom-12" >
+    <div className="absolute bottom-24 right-16 z-[1000] md:bottom-7" >
       <Button
         onClick={handleClick}
         variant="default"

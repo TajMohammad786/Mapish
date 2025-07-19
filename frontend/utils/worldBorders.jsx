@@ -29,8 +29,8 @@ function WorldBorders() {
       ref={geoJsonRef}
       data={IndiaGeo}
       style={(feature) => ({
-        color: feature.properties.BRK_NAME === selectedCountry ? '#ff0000ff' : 'gray',
-        weight: feature.properties.BRK_NAME === selectedCountry ? 0.8 : 0.5,
+        color: feature.properties.BRK_NAME === selectedCountry ? '#7300ffff' : 'white',
+        weight: feature.properties.BRK_NAME === selectedCountry ? 1 : 0.3,
         fillOpacity: 0.05,
       })}
     />

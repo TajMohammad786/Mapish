@@ -49,7 +49,7 @@
 
 /* Desktop: default Leaflet controls position */
 .leaflet-bottom.leaflet-right {
-  margin-bottom: 20px;
+  margin-bottom: 3px;
   /* margin-right: 20px; */
 }
 
