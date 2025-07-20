@@ -66,10 +66,15 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchCountries = async () => {
-      if (!selectedChannel) return;
+      // if (!selectedChannel) return;
       setLoading(true);
       try {
-        const payload = { channelTitle: selectedChannel };
+        let payload = "";
+        if(selectedChannel !== "") {
+           payload = { channelTitle: selectedChannel };
+        }
+        
+
         const res = await apiCall('/getVideos/getCountryNameFromDB', 'POST', payload);
         if (res?.countries && isAuthenticated) {
           setCountries(res.countries);
@@ -156,7 +161,7 @@ const Navbar = () => {
                 <select
                   value={selectedCountry}
                   onChange={(e) => setSelectedCountry(e.target.value)}
-                  disabled={!selectedChannel || loading}
+                  // disabled={!selectedChannel || loading}
                 >
                   <option value="">Country</option>
                   {countries.map((c, idx) => (

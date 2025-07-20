@@ -202,7 +202,7 @@ export async function populateLocationDB(req, res) {
 
 // export async function getChannelNameFromVideo
 
-
+// this will give country name based on channel title
 export async function getCountryNameFromDB(req, res) {
   const {channelTitle} = req.body;
   console.log("Received channelTitle:", channelTitle);
@@ -224,6 +224,26 @@ export async function getCountryNameFromDB(req, res) {
   }
   catch (error) {
     console.error("Failed to fetch channel country:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+}
+
+// returns all distinct countries from the ChannelCountry collection
+export async function getAllDistinctCountries(req, res) {
+  try {
+    const result = await ChannelCountry.aggregate([
+      { $unwind: "$countries" },
+      { $group: { _id: "$countries" } },
+      { $sort: { _id: 1 } }
+    ]);
+    const countries = result.map(item => item._id);
+
+    return res.status(200).json({
+      message: "success",
+      countries,
+    });
+  } catch (error) {
+    console.error("Failed to fetch distinct countries:", error);
     return res.status(500).json({ message: "Server error" });
   }
 }

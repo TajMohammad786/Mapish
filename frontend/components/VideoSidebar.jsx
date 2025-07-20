@@ -5,6 +5,9 @@ import { apiCall } from '../utils/apiCall';
 import Modal from './PlayVidModal'; // Assuming you have a Modal component
 import './VideoSidebar.css'; // Assuming you have a CSS file for styling
 import '../AppGlobal.css';
+import Spinner from './Spinner';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 
 const VideoSidebar = () => {
@@ -54,6 +57,7 @@ const VideoSidebar = () => {
   // console.log(vidStartDate, vidEndDate);
   const fetchVideos = async () => {
     setLoading(true);
+    NProgress.start();
     try {
       const payload = {
         channelTitle: selectedChannel,
@@ -63,18 +67,20 @@ const VideoSidebar = () => {
         startDate: vidStartDate,
         endDate: vidEndDate
       }).toString();
-      // console.log('initial', payload)
       const url = `/getVideos/videos?${queryParams}`;
       const response = await apiCall(url, 'POST', payload);
       const data = response;
-      // setVideos((prev) => [...prev, ...data.videos]);
-      //useVideoStore used to get most recent state of videos from store
-      setVideos([...useVideoStore.getState().videos, ...data.videos]);
-      
+
+      const allVideos = [...useVideoStore.getState().videos, ...data.videos];
+      // allVideos.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+      setVideos(allVideos);
+
     } catch (error) {
       console.error('Error fetching videos:', error);
     } finally {
       setLoading(false);
+      NProgress.done();
     }
   };
 
@@ -100,9 +106,11 @@ const VideoSidebar = () => {
   return (
     
    <>
+    {loading && <Spinner />}
     <div
       className={`hide-scrollbar sidebar ${isSidebarOpen ? 'open' : ''}`}
     >
+     
      {filteredVideos.map((video, index) => {
         const isLast = index === filteredVideos.length - 1;
         return (

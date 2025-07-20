@@ -29,7 +29,24 @@ const App = () => {
     };
   }, [updateIsMobile]);
 
- 
+  useEffect(() => {
+    // Prevent Ctrl+Scroll and pinch zoom when spinner is active
+    const preventZoom = (e) => {
+      if (
+        (e.type === 'wheel' && e.ctrlKey) ||
+        (e.type === 'touchmove' && e.touches && e.touches.length > 1)
+      ) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('wheel', preventZoom, { passive: false });
+    window.addEventListener('touchmove', preventZoom, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', preventZoom);
+      window.removeEventListener('touchmove', preventZoom);
+    };
+  }, []);
 
   return (
     <GoogleOAuthProvider clientId={googleClientId}>

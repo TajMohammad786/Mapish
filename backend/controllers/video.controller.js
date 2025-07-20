@@ -182,7 +182,7 @@ export async function getUploadPlaylistId(channelId) {
   export async function processVideos(req, res) {
     try {
       // const YT_CHANNEL_NAMES = await getYTChannelNamesFromDB();
-      const YT_CHANNEL_NAMES = ['DalePhilip'];
+      const YT_CHANNEL_NAMES = ['BestEverFoodReviewShow'];
       console.log('YT_CHANNEL_NAMES', YT_CHANNEL_NAMES);
 
       if (!YT_CHANNEL_NAMES || YT_CHANNEL_NAMES.length === 0) {
