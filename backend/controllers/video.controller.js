@@ -84,7 +84,7 @@ export async function getUploadPlaylistId(channelId) {
     return recentVideos;
   }
 
-  export async function getLastMonthVideos(playlistId) {
+  export async function getLastMonthVideos(playlistId, days) {
     const playlistData = await axios.get("https://www.googleapis.com/youtube/v3/playlistItems", {
       params: {
         part: "snippet",
@@ -94,7 +94,7 @@ export async function getUploadPlaylistId(channelId) {
       },
     });
 
-    const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const oneMonthAgo = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
     const recentVideos = playlistData.data.items.filter(item =>
       new Date(item.snippet.publishedAt) > oneMonthAgo
     );
@@ -182,7 +182,7 @@ export async function getUploadPlaylistId(channelId) {
   export async function processVideos(req, res) {
     try {
       // const YT_CHANNEL_NAMES = await getYTChannelNamesFromDB();
-      const YT_CHANNEL_NAMES = ['BestEverFoodReviewShow'];
+      const YT_CHANNEL_NAMES = ['dailymax24','PassengerParamvir','BestEverFoodReviewShow','KenAbroad','DalePhilip'];
       console.log('YT_CHANNEL_NAMES', YT_CHANNEL_NAMES);
 
       if (!YT_CHANNEL_NAMES || YT_CHANNEL_NAMES.length === 0) {
@@ -192,12 +192,23 @@ export async function getUploadPlaylistId(channelId) {
       
       let ChannelVideoData = [];
       const fetchLatestVideos =  req.query.fetch24HrVideos;
+      const fetchPrevMonthVideos = req.query.fetchPrevMonthVideos;
       console.log('processVideos called' , fetchLatestVideos);
       
       for(let i = 0; i<YT_CHANNEL_NAMES.length; i++){
           console.log('YT_CHANNEL_NAMES[i]', YT_CHANNEL_NAMES[i]);
           const playlistID = await getUploadPlaylistIdFromDB(YT_CHANNEL_NAMES[i]);
-          const videos = fetchLatestVideos ? await getLast24HrVideos(playlistID) :await getAllVideosFromPlaylist(playlistID) ;
+          let videos = [];
+          if(fetchLatestVideos){
+             videos = await getLast24HrVideos(playlistID);
+          }
+          else if(fetchPrevMonthVideos){
+             videos = await getLastMonthVideos(playlistID, 60);
+          }
+          else{
+             videos = await getAllVideosFromPlaylist(playlistID);
+          }
+          // const videos = fetchLatestVideos ? await getLast24HrVideos(playlistID) :await getAllVideosFromPlaylist(playlistID) ;
           let channelData = {
               channelName: YT_CHANNEL_NAMES[i],
               videos: videos

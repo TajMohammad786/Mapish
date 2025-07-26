@@ -9,6 +9,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { TiInfoLargeOutline } from "react-icons/ti";
 import { FaRegLightbulb } from "react-icons/fa";
 import InfoModal from './InfoModal';
+import RefreshVideos from './RefreshVideo';
 
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -143,6 +144,7 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-right">
+          
           {!isMobile && (
             <>
               <div className="custom-select">
@@ -150,7 +152,7 @@ const Navbar = () => {
                   value={selectedChannel}
                   onChange={(e) => setSelectedChannel(e.target.value)}
                 >
-                  <option value="">Channel</option>
+                  <option value="">*ALL Channel</option>
                   {channels.map((ch, idx) => (
                     <option key={idx} value={ch}>{ch}</option>
                   ))}
@@ -216,6 +218,7 @@ const Navbar = () => {
           {showModal && (
             <div className="settings-modal">
               <ul>
+                <RefreshVideos />
                 {isAuthenticated && <li><button onClick={() => alert('Upload clicked')}>Upload Video</button></li>}
                 {isAuthenticated && <li><button onClick={() => alert('Saved Videos clicked')}>Saved Videos</button></li>}
                 <li>
@@ -252,7 +255,7 @@ const Navbar = () => {
               value={selectedChannel}
               onChange={(e) => setSelectedChannel(e.target.value)}
             >
-              <option value="">Channel</option>
+              <option value="">*ALL Channel</option>
               {channels.map((ch, idx) => (
                 <option key={idx} value={ch}>{ch}</option>
               ))}

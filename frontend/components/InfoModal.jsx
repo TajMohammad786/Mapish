@@ -56,6 +56,7 @@ export default function InfoModal({ open, onClose }) {
               <li>Booom!! - you are in the world of travel vlogs</li>
               <li>Click a pin to see what magic awaits</li>
               <li>Use filters to find videos by place, channel, or date</li>
+              <li>You can load videos from the last 24 Hours into applications !!</li>
             </ol>
           </section>
 

@@ -6,8 +6,7 @@ import Modal from './PlayVidModal'; // Assuming you have a Modal component
 import './VideoSidebar.css'; // Assuming you have a CSS file for styling
 import '../AppGlobal.css';
 import Spinner from './Spinner';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
+
 
 
 const VideoSidebar = () => {
@@ -57,7 +56,6 @@ const VideoSidebar = () => {
   // console.log(vidStartDate, vidEndDate);
   const fetchVideos = async () => {
     setLoading(true);
-    NProgress.start();
     try {
       const payload = {
         channelTitle: selectedChannel,
@@ -80,7 +78,6 @@ const VideoSidebar = () => {
       console.error('Error fetching videos:', error);
     } finally {
       setLoading(false);
-      NProgress.done();
     }
   };
 

@@ -110,7 +110,7 @@ Title: ${title}
 Description: ${description}
 `;
     const cohere = new CohereClientV2({
-      token: process.env.COHERE_API_KEY2,
+      token: process.env.COHERE_API_KEY3,
     });
 
     
