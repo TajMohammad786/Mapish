@@ -6,10 +6,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './Navbar.css';
 import { apiCall } from '../utils/apiCall';
 import { IoSettingsOutline } from "react-icons/io5";
-import { TiInfoLargeOutline } from "react-icons/ti";
 import { FaRegLightbulb } from "react-icons/fa";
 import InfoModal from './InfoModal';
-import RefreshVideos from './RefreshVideo';
+import RefreshVideos from './refreshVideo';
 
 const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
