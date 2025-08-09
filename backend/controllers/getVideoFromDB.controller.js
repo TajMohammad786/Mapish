@@ -84,7 +84,7 @@ export async function getYTChannelNamesFromDB(req,res) {
 // Processed 823/1073 videos as on 29-06-2025 - Daily Max
 // Processed all videos from Passenger Paramvir, Best Ever food review and Ken Abroad as on 20-07-2025
 export async function populateLocationDB(req, res) {
-  // const location = await extractLocationFromMetadataCohere("The Smooching Umbrella Couples of Galle, Sri Lanka 🇱🇰", "I was running around the walls at Galle Fort and in every gap there was a couple under an umbrella.\n\nThe funny thing is, it wasn't raining!\n\nI guess this is how they get some privacy, as they have nowhere else to go. In Sri Lanka it's super common for young adults to live with their parents until they get married.\n\nSo if you visit Sri Lanka and see umbrellas on a sunny day, you now have a good idea what's going on. 🤣👍\n\n#SriLanka #Galle #Travel #TravelAdvice #SoloTravel");
+  // const location = await extractLocationFromMetadataCohere("The Galle, Sri Lanka 🇱🇰", "I was running around the walls at Galle Fort and in every gap there was a couple under an umbrella.\n\nThe funny thing is, it wasn't raining!\n\nI guess this is how they get some privacy, as they have nowhere else to go. In Sri Lanka it's super common for young adults to live with their parents until they get married.\n\nSo if you visit Sri Lanka and see umbrellas on a sunny day, you now have a good idea what's going on. 🤣👍\n\n#SriLanka #Galle #Travel #TravelAdvice #SoloTravel");
   // const location = await extractLocationFromMetadata("The Smooching Umbrella Couples of Galle, Sri Lanka 🇱🇰", "I was running around the walls at Galle Fort and in every gap there was a couple under an umbrella.\n\nThe funny thing is, it wasn't raining!\n\nI guess this is how they get some privacy, as they have nowhere else to go. In Sri Lanka it's super common for young adults to live with their parents until they get married.\n\nSo if you visit Sri Lanka and see umbrellas on a sunny day, you now have a good idea what's going on. 🤣👍\n\n#SriLanka #Galle #Travel #TravelAdvice #SoloTravel");
  
 
@@ -103,16 +103,15 @@ export async function populateLocationDB(req, res) {
     const results = [];
    
     let totalVideos = 0;
-    let processedVideos = 0;
-    let skipCount = 0;
+    let processedVideos = 1;
+    let skipCount = 1;
 
     // Count total videos
     channelVideoData.forEach(channel => {
       totalVideos += channel.videos.length;
     });
 
-    console.log(`Starting to process ${totalVideos} videos. Estimated time: ${Math.ceil(totalVideos / 18)} minutes`);
-
+    console.log(`Starting to process ${totalVideos} videos. Estimated time: ${Math.ceil((totalVideos * 6.5) / 60)} minutes`);
 
     for (const channel of channelVideoData) {
       for (const video of channel.videos) {
@@ -145,7 +144,7 @@ export async function populateLocationDB(req, res) {
         await delay(6500);
         console.log("resume after 6.5 seconds");
         processedVideos++;
-        if (!locationInfo?.country || !locationInfo?.location) {
+        if (!locationInfo?.country || !locationInfo?.location || (locationInfo.country === "Unknown" && locationInfo.location === "Unknown")) {
           console.warn("Missing country or location, skipping video.");
           continue;
         }

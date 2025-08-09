@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import Video from "../models/videoSchema.model.js";
 import { getYTChannelNamesFromDB, getUploadPlaylistIdFromDB } from "./getVideoFromDB.controller.js";
 import ChannelCountry from "../models/channelCountry.model.js";
+import Settings from "../models/settings.model.js";
 dotenv.config();
 
 const YT_API_KEY = process.env.YT_API_KEY;
@@ -108,6 +109,30 @@ export async function getUploadPlaylistId(channelId) {
     return recentVideos;
   }
 
+  export async function getXHoursVideos(playlistId, hours) {
+    const playlistData = await axios.get("https://www.googleapis.com/youtube/v3/playlistItems", {
+      params: {
+        part: "snippet",
+        playlistId,
+        maxResults: 10,
+        key: YT_API_KEY
+      },
+    });
+
+    const hoursAgo = new Date(Date.now() - hours * 60 * 60 * 1000);
+    const recentVideos = playlistData.data.items.filter(item =>
+      new Date(item.snippet.publishedAt) > hoursAgo
+    );
+
+    recentVideos.forEach(item => {
+      const title = item.snippet.title;
+      const videoId = item.snippet.resourceId.videoId;
+      console.log(`${title} - https://www.youtube.com/watch?v=${videoId}`);
+    });
+      
+    return recentVideos;
+  }
+
   // Function to get videos with pagination and filtering
   export async function getFilteredVideos(req, res) {
     const page = parseInt(req.query.page) || 1;
@@ -194,13 +219,16 @@ export async function getUploadPlaylistId(channelId) {
       const fetchLatestVideos =  req.query.fetch24HrVideos;
       const fetchPrevMonthVideos = req.query.fetchPrevMonthVideos;
       console.log('processVideos called' , fetchLatestVideos);
+      const setting = await Settings.findOne({ key: "lastVideoRefresh" });
       
+      const Hours = Math.floor((Date.now() - setting.value) / (1000 * 60 * 60));
+
       for(let i = 0; i<YT_CHANNEL_NAMES.length; i++){
           console.log('YT_CHANNEL_NAMES[i]', YT_CHANNEL_NAMES[i]);
           const playlistID = await getUploadPlaylistIdFromDB(YT_CHANNEL_NAMES[i]);
           let videos = [];
           if(fetchLatestVideos){
-             videos = await getLast24HrVideos(playlistID);
+             videos = await getXHoursVideos(playlistID, Hours);
           }
           else if(fetchPrevMonthVideos){
              videos = await getLastMonthVideos(playlistID, 60);

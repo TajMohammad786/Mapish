@@ -105,10 +105,14 @@ Also note:
 - Be careful to avoid false positives from channel names, hashtags, or unrelated mentions.
 - If you are unsure, make your best intelligent guess using available clues.
 - Latitude and longitude should be **accurate enough to place a pin on a map**.
+- Verify if the longitude and latitude are valid and exists, if not, return null.
 
 Title: ${title}
 Description: ${description}
 `;
+// COHERE_API_KEY -> 29-06-2025
+// COHERE_API_KEY2 -> 20-07-2025
+// COHERE_API_KEY3 -> 20-07-2025
     const cohere = new CohereClientV2({
       token: process.env.COHERE_API_KEY3,
     });
