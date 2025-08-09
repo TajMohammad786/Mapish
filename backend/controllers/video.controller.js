@@ -1,9 +1,10 @@
 import axios from "axios";
 import dotenv from "dotenv";
 import Video from "../models/videoSchema.model.js";
-import { getYTChannelNamesFromDB, getUploadPlaylistIdFromDB } from "./getVideoFromDB.controller.js";
+import { getYTChannelNamesFromDB, getUploadPlaylistIdFromDB, saveChannelIDToDB } from "./getVideoFromDB.controller.js";
 import ChannelCountry from "../models/channelCountry.model.js";
 import Settings from "../models/settings.model.js";
+import Channel from "../models/channel.model.js";
 dotenv.config();
 
 const YT_API_KEY = process.env.YT_API_KEY;
@@ -207,31 +208,42 @@ export async function getUploadPlaylistId(channelId) {
   export async function processVideos(req, res) {
     try {
       // const YT_CHANNEL_NAMES = await getYTChannelNamesFromDB();
-      const YT_CHANNEL_NAMES = ['dailymax24','PassengerParamvir','BestEverFoodReviewShow','KenAbroad','DalePhilip'];
-      console.log('YT_CHANNEL_NAMES', YT_CHANNEL_NAMES);
-
+      // const YT_CHANNEL_NAMES = ['dailymax24','PassengerParamvir','BestEverFoodReviewShow','KenAbroad','DalePhilip'];
+      const fetchLatestVideos =  req.query.fetch24HrVideos;
+      const fetchPrevMonthVideos = req.query.fetchPrevMonthVideos;
+      let YT_CHANNEL_NAMES;
+      if(fetchLatestVideos || fetchPrevMonthVideos){
+        const channel = await Channel.find();
+        YT_CHANNEL_NAMES = channel.map(c => c.channelName);
+      }
+      else{
+        YT_CHANNEL_NAMES = req.body.channelNames;
+      }
+      
       if (!YT_CHANNEL_NAMES || YT_CHANNEL_NAMES.length === 0) {
         console.error("No channel names found in the database.");
         return res.status(400).json({ message: "No channel names found in the database." });
       }
       
       let ChannelVideoData = [];
-      const fetchLatestVideos =  req.query.fetch24HrVideos;
-      const fetchPrevMonthVideos = req.query.fetchPrevMonthVideos;
       console.log('processVideos called' , fetchLatestVideos);
       const setting = await Settings.findOne({ key: "lastVideoRefresh" });
       
       const Hours = Math.floor((Date.now() - setting.value) / (1000 * 60 * 60));
 
+      
+
       for(let i = 0; i<YT_CHANNEL_NAMES.length; i++){
           console.log('YT_CHANNEL_NAMES[i]', YT_CHANNEL_NAMES[i]);
+          const savedChannel = await saveChannelIDToDB(YT_CHANNEL_NAMES[i]);
+
           const playlistID = await getUploadPlaylistIdFromDB(YT_CHANNEL_NAMES[i]);
           let videos = [];
           if(fetchLatestVideos){
              videos = await getXHoursVideos(playlistID, Hours);
           }
           else if(fetchPrevMonthVideos){
-             videos = await getLastMonthVideos(playlistID, 60);
+             videos = await getLastMonthVideos(playlistID, 30);
           }
           else{
              videos = await getAllVideosFromPlaylist(playlistID);

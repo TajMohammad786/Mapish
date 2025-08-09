@@ -4,33 +4,31 @@ import Video from "../models/videoSchema.model.js";
 import Channel from "../models/channel.model.js";
 import ChannelCountry from "../models/channelCountry.model.js";
 
+export async function saveChannelIDToDB(channelName) {
+  if (!channelName) throw new Error("Channel name is required.");
+
+  // Check if channel already exists
+  const existing = await Channel.findOne({ channelName });
+  if (existing) return { message: "Channel already exists.", data: existing };
+
+  const channelId = await getChannelIdByName(channelName);
+  const uploadPlaylistId = await getUploadPlaylistId(channelId);
+
+  const newChannel = new Channel({
+    channelId,
+    channelName,
+    uploadPlaylistId
+  });
+
+  await newChannel.save();
+  return { message: "Channel saved successfully", data: newChannel };
+}
 
 export async function saveChannelID(req, res) {
   const { channelName } = req.body;
-
-  if (!channelName) {
-    return res.status(400).json({ message: "Channel name is required." });
-  }
-
   try {
-    // Check if channel already exists
-    const existing = await Channel.findOne({ channelName });
-    if (existing) {
-      return res.status(200).json({ message: "Channel already exists.", data: existing });
-    }
-
-    const channelId = await getChannelIdByName(channelName);
-    const uploadPlaylistId = await getUploadPlaylistId(channelId);
-
-    const newChannel = new Channel({
-      channelId,
-      channelName,
-      uploadPlaylistId
-    });
-
-    await newChannel.save();
-
-    return res.status(201).json({ message: "Channel saved successfully", data: newChannel });
+    const result = await saveChannelIDToDB(channelName);
+    return res.status(201).json(result);
   } catch (error) {
     console.error("Failed to save channel:", error);
     return res.status(500).json({ message: "Server error" });
