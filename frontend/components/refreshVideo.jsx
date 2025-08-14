@@ -40,7 +40,8 @@ function RefreshVideos() {
     setError("");
     setSuccess("");
     try {
-      const res = await apiCall("/getVideos/refresh-videos", "POST");
+      // const res = await apiCall("/getVideos/refresh-videos", "POST");
+      const res = await fetch("https://mapish-stg.onrender.com/getVideos/refresh-videos", { method: "POST" });
       setLastUpdated(res.lastUpdated);
       setSuccess("Videos refreshed!");
     } catch (e) {

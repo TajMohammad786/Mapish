@@ -320,31 +320,29 @@ export async function getUploadPlaylistId(channelId) {
 //   channelTitle: "channelTitle",
 //   countries: ["country1", "country2"]
 // }
-export async function channelCountry(req, res){
+
+// Helper function
+export async function populateChannelCountries() {
   const channelCountries = await Video.aggregate([
     {
       $group: {
         _id: "$channelTitle",
-        countries: { $addToSet: "$country" } // get unique countries
+        countries: { $addToSet: "$country" }
       }
     }
   ]);
-  // Filter out channels with no countries
   const filteredChannelCountries = channelCountries.filter(channel => channel.countries.length > 0);
-  // Map to the desired format
   const formattedChannelCountries = filteredChannelCountries.map(channel => ({
     channelTitle: channel._id,
     countries: channel.countries
   }));
-  // check if country already exist for a channeltitle
+
   for (const channel of formattedChannelCountries) {
     const existingChannel = await ChannelCountry.findOne({ channelTitle: channel.channelTitle });
     if (existingChannel) {
-      // If it exists, update the countries
       existingChannel.countries = Array.from(new Set([...existingChannel.countries, ...channel.countries]));
       await existingChannel.save();
     } else {
-      // If it doesn't exist, create a new entry
       const newChannelCountry = new ChannelCountry({
         channelTitle: channel.channelTitle,
         countries: channel.countries
@@ -352,12 +350,19 @@ export async function channelCountry(req, res){
       await newChannelCountry.save();
     }
   }
+  return formattedChannelCountries;
+}
 
-  
-  return res.status(200).json({
-    message: "Channel countries populated successfully",
-    channelCountries: formattedChannelCountries
-  });
 
-  
+export async function channelCountry(req, res) {
+  try {
+    const result = await populateChannelCountries();
+    return res.status(200).json({
+      message: "Channel countries populated successfully",
+      channelCountries: result
+    });
+  } catch (error) {
+    console.error("Error populating channel countries:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
 }

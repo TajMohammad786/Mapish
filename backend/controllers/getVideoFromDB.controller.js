@@ -1,4 +1,4 @@
-import { getChannelIdByName, getUploadPlaylistId, processVideos } from "./video.controller.js";
+import { getChannelIdByName, getUploadPlaylistId, processVideos, populateChannelCountries } from "./video.controller.js";
 import { extractLocationFromMetadataCohere } from "./ai_extractlocation.controller.js";
 import Video from "../models/videoSchema.model.js"; 
 import Channel from "../models/channel.model.js";
@@ -185,7 +185,14 @@ export async function populateLocationDB(req, res) {
         }
       }
     }
-
+    const countryPopulate = populateChannelCountries();
+    const fetchLatestVideos =  req.query.fetch24HrVideos;
+    const fetchPrevMonthVideos = req.query.fetchPrevMonthVideos;
+    
+    if(!fetchLatestVideos && !fetchPrevMonthVideos){
+      const ytChannelName = req.body.channelNames;
+      const channelIDPopulate = saveChannelIDToDB(ytChannelName);
+    }
     console.log("Processed videos: completed", " skipped videos ->", skipCount);
     return res.status(200).json({
       message: "success",
