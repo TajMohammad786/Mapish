@@ -12,6 +12,7 @@ import useVideoStore from '../store/videoStore';
 
 const App = () => {
   const isAuthenticated = useVideoStore((state) => state.isAuthenticated);
+  // Keep it in env!!!!
   const googleClientId = '639894565953-tegbiaf6ef1fo3crl4ireadeabss05kv.apps.googleusercontent.com';
    const updateIsMobile = useVideoStore((state) => state.updateIsMobile);
 

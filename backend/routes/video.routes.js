@@ -1,5 +1,5 @@
 import express from "express";
-import { populateLocationDB, saveChannelID,getYTChannelNamesFromDB,getCountryNameFromDB, getAllDistinctCountries } from "../controllers/getVideoFromDB.controller.js";
+import { populateLocationDB, saveChannelID,getYTChannelNamesFromDB,getCountryNameFromDB, getAllDistinctCountries, getAllChannels } from "../controllers/getVideoFromDB.controller.js";
 import { getVideos,processVideos , channelCountry,updatePlaybackId} from "../controllers/video.controller.js";
 import {refreshVideos,getRefreshStatus} from "../controllers/refreshSetting.controller.js";
 const Router = express.Router();
@@ -9,6 +9,7 @@ Router.post("/videos", getVideos);
 Router.get("/channelCountry", channelCountry);
 Router.post("/refresh-videos", refreshVideos);
 Router.get("/refresh-status", getRefreshStatus);
+Router.get("/channels", getAllChannels);
 
 Router.post("/addLocation", populateLocationDB);
 Router.post("/addChannel", saveChannelID);

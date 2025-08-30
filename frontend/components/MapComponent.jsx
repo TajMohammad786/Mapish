@@ -10,7 +10,7 @@ import {
   } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState, useRef,useImperativeHandle } from 'react';
 import useMapStore from '../store/mapStore';
 import useVideoStore from '../store/videoStore';
 import '../AppGlobal.css';
@@ -25,17 +25,17 @@ import ytIcon from '../src/assets/yt-icon.png';
 import './MapComponent.css';
 import Modal from './PlayVidModal'; // Assuming you have a Modal component
 
-// import redIconUrl from 'leaflet-color-markers/img/marker-icon-red.png'
-// import shadowUrl from 'leaflet-color-markers/img/marker-shadow.png';
+import redIconUrl from 'leaflet-color-markers/img/marker-icon-red.png'
+import shadowUrl from 'leaflet-color-markers/img/marker-shadow.png';
 // create a custom Icon instance
-// const redIcon = new L.Icon({
-//   iconUrl: redIconUrl,
-//   shadowUrl: shadowUrl,
-//   iconSize:    [25, 41],  // same size as default
-//   iconAnchor:  [12, 41],  // point of the icon which will correspond to marker's location
-//   popupAnchor: [1, -34],  // point from which the popup should open relative to the iconAnchor
-//   shadowSize:  [41, 41]
-// })
+const redIcon = new L.Icon({
+  iconUrl: redIconUrl,  
+  shadowUrl: shadowUrl,
+  iconSize:    [25, 41],  // same size as default
+  iconAnchor:  [12, 41],  // point of the icon which will correspond to marker's location
+  popupAnchor: [1, -34],  // point from which the popup should open relative to the iconAnchor
+  shadowSize:  [41, 41]
+})
 
 const youtubeIcon = new L.Icon({
   iconUrl: ytIcon,
@@ -56,21 +56,24 @@ L.Icon.Default.mergeOptions({
 
 const { BaseLayer } = LayersControl;
 
-const RecenterMap = ({ position }) => {
+const RecenterMap = ({ position, setMapInstance }) => {
   const map = useMap();
   useEffect(() => {
-    map.setView(position);
+    setMapInstance(map);
+    // map.flyTo(position, 20, { animate: true })
+    map.setView(position, 20);
   }, [position, map]);
   return null;
 };
   
 
-  
-const MapWithLayers = () => {
+
+const MapWithLayers = forwardRef((props, ref) => {
     const { position, accuracy, zoom, updateLocation } = useMapStore();
     const { videos, open, selectedVideo, handleClose, handleOpen, toggleSidebar,
        isSidebarOpen, setSelectedVideoId, isMobile } = useVideoStore();
     const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
+    const [leafletMap, setLeafletMap] = useState(null);
 
     useEffect(() => {
       if (navigator.geolocation) {
@@ -107,13 +110,24 @@ const MapWithLayers = () => {
       setMarkers(updatedMarkers)
     }, [videos])
 
+    const [highlightedId, setHighlightedId] = useState(null);
+
+    useImperativeHandle(ref, () => ({
+      zoomAndHighlight(videoId, lat, lng) {
+         setHighlightedId(videoId);
+         if(leafletMap){
+          leafletMap.flyTo([lat, lng], 13, { animate: true });
+         }
+       }
+    }));
+
   
     return (
       <div className="flex h-screen w-full">
       
       <MapContainer center={position} zoom={zoom}  className="map-container-fullscreen" zoomControl={false} >
         <MapSearchBar/>
-        <RecenterMap position={position} />
+        <RecenterMap position={position} setMapInstance={setLeafletMap} />
         <LocateButton  />
         <WorldBorders />
         
@@ -173,8 +187,7 @@ const MapWithLayers = () => {
           <Marker
             key={id}
             position={position}
-            icon = {youtubeIcon} 
-           
+            icon={highlightedId === videoId ? redIcon : youtubeIcon}           
           >
            <Popup maxWidth={300}>
               <div
@@ -208,6 +221,6 @@ const MapWithLayers = () => {
       </MapContainer> 
       </div>
     );
-  };
+  });
   
   export default MapWithLayers;

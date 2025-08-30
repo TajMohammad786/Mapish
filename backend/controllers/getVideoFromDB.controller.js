@@ -1,4 +1,4 @@
-import { getChannelIdByName, getUploadPlaylistId, processVideos, populateChannelCountries } from "./video.controller.js";
+import { getChannelByName, getUploadPlaylistId, processVideos, populateChannelCountries } from "./video.controller.js";
 import { extractLocationFromMetadataCohere } from "./ai_extractlocation.controller.js";
 import Video from "../models/videoSchema.model.js"; 
 import Channel from "../models/channel.model.js";
@@ -11,18 +11,38 @@ export async function saveChannelIDToDB(channelName) {
   const existing = await Channel.findOne({ channelName });
   if (existing) return { message: "Channel already exists.", data: existing };
 
-  const channelId = await getChannelIdByName(channelName);
+  const channel = await getChannelByName(channelName);
+  const channelId = channel?.id?.channelId;
+  const channelThumbnail = channel?.snippet?.thumbnails?.high?.url;
   const uploadPlaylistId = await getUploadPlaylistId(channelId);
 
   const newChannel = new Channel({
     channelId,
     channelName,
+    channelThumbnail,
     uploadPlaylistId
   });
 
   await newChannel.save();
   return { message: "Channel saved successfully", data: newChannel };
 }
+
+export async function getAllChannels(req, res) {
+  try {
+    const channels = await Channel.find();
+    return res.status(200).json({
+      message: "success",
+      channels,
+    });
+  } catch (error) {
+    console.error("Error fetching channels:", error.message);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+}
+
 
 export async function saveChannelID(req, res) {
   const { channelName } = req.body;

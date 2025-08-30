@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import useVideoStore from '../store/videoStore';
 import useMapStore from '../store/mapStore';
+import { FaCrosshairs } from 'react-icons/fa';
 import { apiCall } from '../utils/apiCall';
 import Modal from './PlayVidModal'; // Assuming you have a Modal component
 import './VideoSidebar.css'; // Assuming you have a CSS file for styling
@@ -9,8 +10,7 @@ import Spinner from './Spinner';
 
 
 
-const VideoSidebar = () => {
-
+const VideoSidebar = ({mapRef}) => {
   // This way is used since we cannot directly update without having instance video
   const videos = useVideoStore((state) => state.videos);
   const setVideos = useVideoStore((state) => state.setVideos);
@@ -25,6 +25,9 @@ const VideoSidebar = () => {
   const selectedVideoId = useVideoStore((state) => state.selectedVideoId);
   const searchTerm = useVideoStore((state) => state.searchTerm);
   const isMobile = useVideoStore((state) => state.isMobile);
+
+  const channelIdToThumbnail = useVideoStore((state) => state.channelIdToThumbnail);
+  const setChannelIdToThumbnail = useVideoStore((state) => state.setChannelIdToThumbnail);
 
   const [iframeLoaded, setIframeLoaded] = useState({});
 
@@ -81,11 +84,31 @@ const VideoSidebar = () => {
     }
   };
 
+  const fetchChannels = async () => {
+      try {
+        const res = await apiCall('/getVideos/channels', 'GET');
+        // Assuming res.channels is an array of channel objects
+        const mapping = {};
+        res.channels.forEach(channel => {
+          mapping[channel.channelId] = channel.channelThumbnail;
+        });
+        setChannelIdToThumbnail(mapping);
+      } catch (err) {
+        console.error('Failed to fetch channels:', err);
+      }
+    };
+
+    const getChannelThumbnail = (channelId) => channelIdToThumbnail[channelId] || '';
+
+  
+
+
   useEffect(() => {
     if (!selectedCountry) return;
     // console.log('selectedChannel', selectedChannel);
     setVideos([]);
     fetchVideos();
+    fetchChannels();
     setPage(1);
     
   }, [selectedCountry, selectedChannel, endDate]);
@@ -163,10 +186,36 @@ const VideoSidebar = () => {
             
             <p>{video.title}</p>
             <small>
-              {video.locality ? video.locality + ', ' : ''}
-              {video.location ? video.location + ', ' : ''}
+              {(video.locality && video.locality !== "Unknown") ? video.locality + ', ' : ''}
+              {(video.location && video.location !== "Unknown") ? video.location + ', ' : ''}
               {video.country || ''}
             </small>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '8px 0' }}>
+              <img
+                src={getChannelThumbnail(video.channelId)}
+                alt={video.channelTitle}
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  border: '1.5px solid #ddd',
+                  background: '#fff'
+                }}
+              />
+              <span style={{ fontWeight: 500, fontSize: 15 }}>{video.channelTitle}</span>
+              <div
+              style={{ color: "white", marginLeft: 'auto', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center', gap: '4px', border: '1px solid white', borderRadius: '4px' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  mapRef.current?.zoomAndHighlight(video.playbackId, video.coordinates.coordinates[1], video.coordinates.coordinates[0]);
+                  if(isMobile && isSidebarOpen) toggleSidebar(); // close sidebar on mobile
+                }}
+              >
+                Locate
+                <FaCrosshairs />
+              </div>
+            </div>
           </div>
         );
       })}

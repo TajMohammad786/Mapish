@@ -13,6 +13,12 @@ const useVideoStore = create((set, get) => ({
     searchTerm: '',
     isMobile: window.innerWidth < 768,
     isAuthenticated : false,
+    channels: [],
+    channelIdToThumbnail: {},
+
+    setChannelIdToThumbnail: (mapping) => set({ channelIdToThumbnail: mapping }),
+
+    setChannels: (channels) => set({ channels }),
     setIsAuthenticated : (value) => set({ isAuthenticated: value }),
     setIsMobile: (value) => set({ isMobile: value }),
 

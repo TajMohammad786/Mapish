@@ -31,7 +31,9 @@ const Navbar = () => {
   const setIsAuthenticated = useVideoStore((state) => state.setIsAuthenticated);
   // const selectedVideoId = useVideoStore((state) => state.selectedVideoId);
 
-  const [channels, setChannels] = useState([]);
+  // const [channels, setChannels] = useState([]);
+  const channels = useVideoStore((state) => state.channels);
+  const setChannels = useVideoStore((state) => state.setChannels);
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(false);
 

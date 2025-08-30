@@ -10,7 +10,7 @@ dotenv.config();
 const YT_API_KEY = process.env.YT_API_KEY;
 
 //step 1: get channel id by name
-export async function getChannelIdByName(name) {
+export async function getChannelByName(name) {
     const res = await axios.get("https://www.googleapis.com/youtube/v3/search", {
       params: {
         part: "snippet",
@@ -22,7 +22,7 @@ export async function getChannelIdByName(name) {
     });
   
     const channel = res.data.items[0];
-    return channel?.id?.channelId;
+    return channel;
 }
 
 // step 2: get playlist id by channel id
