@@ -37,7 +37,7 @@ const Modal = ({ isOpen, onClose, selectedVideo }) => {
             <div className="modal-details">
               <div>
                 <h2>{selectedVideo.title}</h2>
-                <p>
+                <p style={{color:"#aaa"}}>
                   {selectedVideo.locality ? selectedVideo.locality + ", " : ""}
                   {selectedVideo.location ? selectedVideo.location + ", " : ""}
                   {selectedVideo.country || ""}

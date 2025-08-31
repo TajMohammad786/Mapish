@@ -11,15 +11,15 @@
 }
 
 .leaflet-popup-close-button {
-  color: #aaa;
+  color: #fff !important;
 }
 .leaflet-popup-close-button:hover {
-  color: #fff;
+  color: #aaa !important;
 }
 
 .popup-content {
     position: relative;
-    width: 280px;
+    width: 390px;
     background-color: #1e1e1e;
     border-radius: 8px;
     padding: 3px;
@@ -30,7 +30,7 @@
 .popup-content img{
     width: 100%;
     border-radius: 6px;
-    margin-top: 0.5rem;
+    /* margin-top: 0.5rem; */
     border: 1px solid #333;
 }
 
@@ -41,7 +41,7 @@
 }
 
 #popup-location {
-    margin-top: 0.1rem;
+    margin-top: 0.1rem !important;
     color: #aaa;
     margin-bottom: 0.3rem;
     font-size: 0.85rem;

@@ -18,7 +18,7 @@ const VideoSidebar = ({mapRef}) => {
   const [loading, setLoading] = useState(false);
   // const [hasMore, setHasMore] = useState(true);
   const {selectedChannel, selectedCountry, dateRange, isSidebarOpen, toggleSidebar,
-         open,selectedVideo,handleClose, handleOpen} = useVideoStore();
+         open,selectedVideo,handleVidModalClose, handleVidModalOpen} = useVideoStore();
   const [startDate, endDate] = dateRange;
   const observer = useRef();
   const videoRefs = useRef({});
@@ -144,7 +144,7 @@ const VideoSidebar = ({mapRef}) => {
               if (isMobile) {
                 setIframeLoaded(prev => ({ [video.playbackId]: true }));
               } else {
-                handleOpen(video); // Open modal for desktop
+                handleVidModalOpen(video); // Open modal for desktop
               }
             }}
 
@@ -185,7 +185,7 @@ const VideoSidebar = ({mapRef}) => {
 
             
             <p>{video.title}</p>
-            <small>
+            <small style={{color:"#cbcacaff"}}>
               {(video.locality && video.locality !== "Unknown") ? video.locality + ', ' : ''}
               {(video.location && video.location !== "Unknown") ? video.location + ', ' : ''}
               {video.country || ''}
@@ -210,6 +210,7 @@ const VideoSidebar = ({mapRef}) => {
                   e.stopPropagation();
                   mapRef.current?.zoomAndHighlight(video.playbackId, video.coordinates.coordinates[1], video.coordinates.coordinates[0]);
                   if(isMobile && isSidebarOpen) toggleSidebar(); // close sidebar on mobile
+                  if(!isMobile) handleVidModalClose();
                 }}
               >
                 Locate
@@ -224,7 +225,7 @@ const VideoSidebar = ({mapRef}) => {
       
     </div>
     {!isMobile && (
-      <Modal isOpen={open} onClose={handleClose} selectedVideo={selectedVideo} />
+      <Modal isOpen={open} onClose={handleVidModalClose} selectedVideo={selectedVideo} />
     )}
 
     </>

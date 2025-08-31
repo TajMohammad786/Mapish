@@ -28,8 +28,8 @@ const useVideoStore = create((set, get) => ({
 
     setSearchTerm: (term) => set({ searchTerm: term }),
     setSelectedVideoId: (id) => set({ selectedVideoId: id }),
-    handleClose: () => set({ open: false, selectedVideo: null }),
-    handleOpen: (video) => set({ selectedVideo: video, open: true }),
+    handleVidModalClose: () => set({ open: false, selectedVideo: null }),
+    handleVidModalOpen: (video) => set({ selectedVideo: video, open: true }),
 
     setOpen: (open) => set({ open }),
     setSelectedVideo: (video) => set({ selectedVideo: video }),

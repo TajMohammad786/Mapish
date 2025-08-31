@@ -14,9 +14,9 @@ import { forwardRef, useEffect, useState, useRef,useImperativeHandle } from 'rea
 import useMapStore from '../store/mapStore';
 import useVideoStore from '../store/videoStore';
 import '../AppGlobal.css';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+// import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+// import markerIcon from 'leaflet/dist/images/marker-icon.png';
+// import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import {LocateButton} from './LocateButton';
 import WorldBorders from '../utils/worldBorders';
 import MapSearchBar from './MapSearchBar';
@@ -25,11 +25,21 @@ import ytIcon from '../src/assets/yt-icon.png';
 import './MapComponent.css';
 import Modal from './PlayVidModal'; // Assuming you have a Modal component
 
-import redIconUrl from 'leaflet-color-markers/img/marker-icon-red.png'
+import goldIcon from 'leaflet-color-markers/img/marker-icon-2x-gold.png'
+import greenIcon from 'leaflet-color-markers/img/marker-icon-2x-green.png'
 import shadowUrl from 'leaflet-color-markers/img/marker-shadow.png';
 // create a custom Icon instance
-const redIcon = new L.Icon({
-  iconUrl: redIconUrl,  
+const goldenIcon = new L.Icon({
+  iconUrl: goldIcon,  
+  shadowUrl: shadowUrl,
+  iconSize:    [25, 41],  // same size as default
+  iconAnchor:  [12, 41],  // point of the icon which will correspond to marker's location
+  popupAnchor: [1, -34],  // point from which the popup should open relative to the iconAnchor
+  shadowSize:  [41, 41]
+})
+
+const greenerIcon = new L.Icon({
+  iconUrl: greenIcon,  
   shadowUrl: shadowUrl,
   iconSize:    [25, 41],  // same size as default
   iconAnchor:  [12, 41],  // point of the icon which will correspond to marker's location
@@ -47,12 +57,12 @@ const youtubeIcon = new L.Icon({
 
 
 // Fix missing marker icons in Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
+// delete L.Icon.Default.prototype._getIconUrl;
+// L.Icon.Default.mergeOptions({
+//   iconRetinaUrl: markerIcon2x,
+//   iconUrl: markerIcon,
+//   shadowUrl: markerShadow,
+// });
 
 const { BaseLayer } = LayersControl;
 
@@ -70,10 +80,13 @@ const RecenterMap = ({ position, setMapInstance }) => {
 
 const MapWithLayers = forwardRef((props, ref) => {
     const { position, accuracy, zoom, updateLocation } = useMapStore();
-    const { videos, open, selectedVideo, handleClose, handleOpen, toggleSidebar,
+    const { videos, open, selectedVideo, handleVidModalClose, handleVidModalOpen, toggleSidebar,
        isSidebarOpen, setSelectedVideoId, isMobile } = useVideoStore();
     const mapTilerApiKey = import.meta.env.VITE_MAPTILER_API_KEY;
     const [leafletMap, setLeafletMap] = useState(null);
+    const channelIdToThumbnail = useVideoStore((state) => state.channelIdToThumbnail);
+    const [highlightedId, setHighlightedId] = useState(null);
+    const [markers, setMarkers] = useState([])
 
     useEffect(() => {
       if (navigator.geolocation) {
@@ -90,7 +103,6 @@ const MapWithLayers = forwardRef((props, ref) => {
       }
     }, [accuracy,zoom]);
 
-    const [markers, setMarkers] = useState([])
 
     useEffect(() => {
       const updatedMarkers = videos.map((video) => ({
@@ -103,6 +115,8 @@ const MapWithLayers = forwardRef((props, ref) => {
         title: video.title,
         thumbnail: video.thumbnails?.high, // Make sure this exists
         videoId: video.playbackId,
+        channelId: video.channelId,
+        channelTitle: video.channelTitle,
         location: video.location,
         locality: video.locality,
         country: video.country,
@@ -110,13 +124,15 @@ const MapWithLayers = forwardRef((props, ref) => {
       setMarkers(updatedMarkers)
     }, [videos])
 
-    const [highlightedId, setHighlightedId] = useState(null);
+    const getChannelThumbnail = (channelId) => channelIdToThumbnail[channelId] || '';
+
+
 
     useImperativeHandle(ref, () => ({
       zoomAndHighlight(videoId, lat, lng) {
          setHighlightedId(videoId);
          if(leafletMap){
-          leafletMap.flyTo([lat, lng], 13, { animate: true });
+          leafletMap.flyTo([lat, lng], 16, { animate: true });
          }
        }
     }));
@@ -179,21 +195,22 @@ const MapWithLayers = forwardRef((props, ref) => {
             radius={accuracy}
         />
   
-        <Marker position={position} >
+        <Marker position={position} icon={goldenIcon}>
           <Popup>You are here!</Popup>
         </Marker>
         {/* {console.log("marker", markers)} */}
-         {markers.map(({ id, position, title, thumbnail, videoId, location, locality, country }) => (
+         {markers.map(({ id, position, title, thumbnail, channelId, channelTitle, videoId, location, locality, country }) => (
           <Marker
             key={id}
             position={position}
-            icon={highlightedId === videoId ? redIcon : youtubeIcon}           
+            icon={highlightedId === videoId ? greenerIcon : youtubeIcon}  
+            zIndexOffset={highlightedId === videoId ? 1000 : 0} 
           >
-           <Popup maxWidth={300}>
+           <Popup maxWidth={390}>
               <div
                 className='popup-content'
                 onClick={() => {
-                  isMobile ? '': handleOpen({ playbackId: videoId, title, thumbnail, location, locality, country })
+                  isMobile ? '': handleVidModalOpen({ playbackId: videoId, title, thumbnail, location, locality, country })
                   isSidebarOpen ? '':toggleSidebar();
                   setSelectedVideoId(videoId);
                 }}
@@ -210,12 +227,29 @@ const MapWithLayers = forwardRef((props, ref) => {
                     {location ? location + ', ' : ''}
                     {country || ''}
                   </p>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '0' }}>
+                    <img
+                      src={getChannelThumbnail(channelId)}
+                      alt={channelTitle}
+                      // alt="YouTube Channel"
+                      style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        border: '1.5px solid #ddd',
+                        background: '#fff'
+                      }}
+                    />
+                    <span style={{ fontWeight: 500, fontSize: 14 }}>{channelTitle}</span>
+                  </div>
               </div>
             </Popup>  
 
           </Marker>
         ))}
-        <Modal isOpen={open} onClose={handleClose} selectedVideo={selectedVideo}>
+        <Modal isOpen={open} onClose={handleVidModalClose} selectedVideo={selectedVideo}>
     
         </Modal>
       </MapContainer> 

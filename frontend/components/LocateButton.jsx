@@ -9,7 +9,7 @@ export const LocateButton = () => {
 
   const handleClick = () => {
     const zoom = getZoomLevelByAccuracy(accuracy);
-    map.setView(position, zoom);
+    map.flyTo(position, zoom);
   };
 
   return (
