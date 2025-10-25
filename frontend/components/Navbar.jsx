@@ -76,7 +76,7 @@ const Navbar = () => {
            payload = { channelTitle: selectedChannel };
         }
         
-
+        console.log("channel payload: ", payload);
         const res = await apiCall('/getVideos/getCountryNameFromDB', 'POST', payload);
         if (res?.countries && isAuthenticated) {
           setCountries(res.countries);
@@ -89,6 +89,7 @@ const Navbar = () => {
     };
 
     fetchCountries();
+    console.log('Selected Channel changed: ', countries);
   }, [selectedChannel,isAuthenticated]);
 
   const handleLogout = () => {

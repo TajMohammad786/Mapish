@@ -2,8 +2,8 @@ import './App.css';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import  AuthEntry  from '../components/AuthEntry';
 
-import GoogleLogin from '../utils/GoogleLogin';
 import Dashboard from '../pages/Dashboard';
 import RefrshHandler from '../utils/RefreshHandler';
 import NotFound from '../components/NotFound';
@@ -14,7 +14,7 @@ const App = () => {
   const isAuthenticated = useVideoStore((state) => state.isAuthenticated);
   // Keep it in env!!!!
   const googleClientId = '639894565953-tegbiaf6ef1fo3crl4ireadeabss05kv.apps.googleusercontent.com';
-   const updateIsMobile = useVideoStore((state) => state.updateIsMobile);
+  const updateIsMobile = useVideoStore((state) => state.updateIsMobile);
 
   useEffect(() => {
 
@@ -57,8 +57,9 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={
-            isAuthenticated ? <Navigate to="/dashboard" /> : <GoogleLogin />
+            isAuthenticated ? <Navigate to="/dashboard" /> : <AuthEntry />
           } />
+          
           <Route path="/dashboard" element={
             isAuthenticated ? <Dashboard /> : <Navigate to="/" />
           } />

@@ -14,8 +14,8 @@ Router.get("/channels", getAllChannels);
 Router.post("/addLocation", populateLocationDB);
 Router.post("/addChannel", saveChannelID);
 Router.post("/getYTChannel", getYTChannelNamesFromDB);
-// Router.post("/getCountryNameFromDB", getCountryNameFromDB);
-Router.post("/getCountryNameFromDB", getAllDistinctCountries);
+Router.post("/getCountryNameFromDB", getCountryNameFromDB);
+// Router.post("/getCountryNameFromDB", getAllDistinctCountries);
 
 Router.post("/updatePlaybackId", updatePlaybackId);
 

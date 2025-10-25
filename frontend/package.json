@@ -19,6 +19,7 @@
     "clsx": "^2.1.1",
     "leaflet": "^1.9.4",
     "leaflet-color-markers": "^0.1.0",
+    "leaflet-geosearch": "4.2.0",
     "lucide-react": "^0.511.0",
     "mapish": "file:..",
     "react": "^19.1.0",
@@ -27,11 +28,11 @@
     "react-icons": "^5.5.0",
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.6.0",
+    "react-spinners": "0.17.0",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.7",
-    "zustand": "^5.0.4",
-    "leaflet-geosearch": "4.2.0",
-    "react-spinners": "0.17.0"
+    "ua-parser-js": "^2.0.6",
+    "zustand": "^5.0.4"
   },
   "devDependencies": {
     "@types/react": "^19.1.4",

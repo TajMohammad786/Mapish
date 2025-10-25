@@ -232,8 +232,28 @@ export async function getCountryNameFromDB(req, res) {
   const {channelTitle} = req.body;
   console.log("Received channelTitle:", channelTitle);
 
-  if (!channelTitle) {
-    return res.status(400).json({ message: "Channel title is required." });
+  // commented for *ALL
+  // if (!channelTitle) {
+  //   return res.status(400).json({ message: "Channel title is required." });
+  // }
+
+  if(!channelTitle){
+      try {
+      const result = await ChannelCountry.aggregate([
+        { $unwind: "$countries" },
+        { $group: { _id: "$countries" } },
+        { $sort: { _id: 1 } }
+      ]);
+      const countries = result.map(item => item._id);
+
+      return res.status(200).json({
+        message: "success",
+        countries,
+      });
+    } catch (error) {
+      console.error("Failed to fetch distinct countries:", error);
+      return res.status(500).json({ message: "Server error" });
+    }
   }
 
   try {
@@ -241,7 +261,7 @@ export async function getCountryNameFromDB(req, res) {
     if (!channelCountry || channelCountry.length === 0) {
       return res.status(404).json({ message: "Channel country not found." });
     }
-
+    console.log("Fetched channel country from DB:", channelCountry.length);
     return res.status(200).json({
       message: "success",
       countries: channelCountry[0].countries,

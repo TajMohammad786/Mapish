@@ -33,7 +33,7 @@ const GoogleLogin = (props) => {
 
 	return (
 		<div className="App" style={{ display: "flex", justifyContent: "center" }}>
-			<button onClick={googleLogin} style={{ marginTop: "300px" }}>
+			<button onClick={googleLogin} style={{ border: "2px solid grey",  marginTop: "300px" }}>
 				Sign in with Google
 			</button>
 		</div>

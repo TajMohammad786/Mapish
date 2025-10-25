@@ -11,10 +11,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     const data = localStorage.getItem('user-info');
+    let id = localStorage.getItem('visitorId');
     const userData = JSON.parse(data);
-    if (!userData) {
+    if (!userData && !id) {
       navigate('/login');
-    } else {
+    } else if(id) {
+      setUserInfo(id);
+    }
+    else{
       setUserInfo(userData);
     }
   }, [navigate]);
