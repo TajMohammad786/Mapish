@@ -1,0 +1,26 @@
+name: Keep Render Alive
+
+# Runs on a schedule
+on:
+  schedule:
+    # every 4 minutes
+    - cron: '*/4 * * * *'
+  # allow manual runs from Actions tab
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render app
+        # Replace the URL below with your app URL (use /health if available)
+        run: |
+          echo "Pinging https://mapish.onrender.com/"
+          status=$(curl -s -o /dev/null -w "%{http_code}" https://mapish.onrender.com/)
+          echo "HTTP status: $status"
+          if [ "$status" -ge 200 ] && [ "$status" -lt 400 ]; then
+            echo "Ping successful"
+          else
+            echo "Ping failed or returned non-2xx/3xx"
+            exit 1
+          fi
