@@ -3,6 +3,8 @@
 **Mapish** is a web app that maps YouTube vlog videos to real-world locations on an interactive map. The goal is to make travel content easily explorable by **location** rather than just text-based search.
 
 ![image](https://github.com/user-attachments/assets/be581927-779c-4f1b-87f9-665dec489090)
+
+
 <img width="1916" height="909" alt="Screenshot 2025-10-25 173251" src="https://github.com/user-attachments/assets/114e3845-1bd0-4315-aee6-b4473377e006" />
 
 ---
